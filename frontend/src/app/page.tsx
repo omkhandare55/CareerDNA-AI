@@ -1,299 +1,328 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import {
   Sparkles,
-  TrendingUp,
-  Award,
-  Briefcase,
-  Target,
   ArrowRight,
   ShieldCheck,
+  Dna,
+  Network,
+  History,
+  CheckCircle2,
+  TrendingUp,
   Zap,
-  Info,
-  Clock,
-  ChevronRight
+  Terminal,
+  Layers,
+  Cpu,
+  Database,
+  Lock,
+  ChevronRight,
+  ExternalLink
 } from "lucide-react";
-import ExplainModal from "@/components/ExplainModal";
 
-export default function Dashboard() {
-  const [isExplainOpen, setIsExplainOpen] = useState(false);
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [streamProgress, setStreamProgress] = useState(100);
-
-  const handleSimulateStreaming = () => {
-    setIsStreaming(true);
-    setStreamProgress(0);
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 25;
-      setStreamProgress(progress);
-      if (progress >= 100) {
-        clearInterval(interval);
-        setIsStreaming(false);
-      }
-    }, 300);
-  };
+export default function LandingPage() {
+  const [activeTab, setActiveTab] = useState<"memory" | "agent" | "db">("memory");
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-12 font-sans">
-      {/* 1. HERO SECTION - NEO-BRUTALIST */}
-      <div className="relative bg-[#0F172A] p-8 border-4 border-slate-100 shadow-[8px_8px_0px_0px_#3B82F6]">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#A855F7] text-white border-2 border-slate-100 text-xs font-black uppercase tracking-wider font-mono shadow-[2px_2px_0px_0px_#FACC15]">
-              <Sparkles className="w-4 h-4 text-yellow-300" />
-              <span>Career DNA Evolved Today</span>
+    <div className="min-h-screen bg-[#020617] text-slate-100 font-sans selection:bg-[#FACC15] selection:text-slate-950 pb-20">
+      {/* ─────────────────────────────────────────────────────────────────────────────
+          1. TOP NAVIGATION BAR
+         ───────────────────────────────────────────────────────────────────────────── */}
+      <nav className="border-b-4 border-slate-800 bg-[#0A0F1D] sticky top-0 z-50 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#FACC15] text-[#020617] border-2 border-slate-100 flex items-center justify-center font-black text-xl shadow-[3px_3px_0px_0px_#3B82F6]">
+              🧬
             </div>
-            <h1 className="text-4xl font-black tracking-tight text-slate-50 uppercase font-mono">
-              Hello Vijay 👋
-            </h1>
-            <p className="text-xs text-slate-300 font-medium max-w-2xl leading-relaxed">
-              Your lifelong AI Career Agent synthesized 4 new interview signals and updated your trajectory graph in CockroachDB.
-            </p>
-          </div>
-
-          {/* Hero Score Brutalist Box */}
-          <div className="flex items-center gap-6 p-5 bg-[#020617] border-4 border-yellow-400 shadow-[6px_6px_0px_0px_#FACC15]">
             <div>
-              <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest font-mono">Career Readiness</p>
-              <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="text-5xl font-black font-mono text-slate-50">87</span>
-                <span className="text-xs font-black text-green-400 flex items-center gap-0.5 font-mono">
-                  <TrendingUp className="w-4 h-4" /> +3 W/W
-                </span>
-              </div>
+              <span className="font-black text-xl text-slate-100 uppercase tracking-wider font-mono flex items-center gap-1.5">
+                CareerDNA <span className="text-xs px-2 py-0.5 bg-[#EC4899] text-white border border-slate-100 font-bold">AI</span>
+              </span>
+              <p className="text-[10px] text-yellow-400 font-bold uppercase tracking-widest font-mono">Lifelong AI Career Engine</p>
             </div>
+          </Link>
 
-            <div className="h-12 w-1 bg-slate-700"></div>
-
-            <div>
-              <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest font-mono">AI Confidence</p>
-              <div className="flex items-center gap-1.5 mt-1">
-                <ShieldCheck className="w-6 h-6 text-purple-400" />
-                <span className="text-2xl font-black text-purple-300 font-mono">94%</span>
-              </div>
-              <p className="text-[9px] text-yellow-400 font-bold font-mono uppercase">6 Proof Sources</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. QUICK STATS GRID - NEO-BRUTALIST CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {[
-          { label: "Verified Skills", value: "42", change: "+4 new", icon: Award, border: "border-blue-500 shadow-[4px_4px_0px_0px_#3B82F6]", badge: "bg-blue-500" },
-          { label: "Active Applications", value: "31", change: "8 interviewing", icon: Briefcase, border: "border-purple-500 shadow-[4px_4px_0px_0px_#A855F7]", badge: "bg-purple-500" },
-          { label: "Interview Rate", value: "25.8%", change: "+3.2% vs avg", icon: Target, border: "border-green-500 shadow-[4px_4px_0px_0px_#22C55E]", badge: "bg-green-500" },
-          { label: "Critical Gap", value: "System Design", change: "Action required", icon: Zap, border: "border-yellow-400 shadow-[4px_4px_0px_0px_#FACC15]", badge: "bg-yellow-400 text-slate-950" },
-        ].map((stat, idx) => {
-          const Icon = stat.icon;
-          return (
-            <div key={idx} className={`bg-[#0F172A] p-5 border-2 ${stat.border} space-y-3`}>
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-slate-400 uppercase tracking-widest font-mono">{stat.label}</span>
-                <div className={`p-2 border border-slate-100 ${stat.badge} text-slate-950 font-black`}>
-                  <Icon className="w-4 h-4" />
-                </div>
-              </div>
-              <div className="flex items-baseline justify-between">
-                <span className="text-3xl font-black font-mono text-slate-50">{stat.value}</span>
-                <span className="text-[11px] font-bold text-slate-300 font-mono uppercase">{stat.change}</span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* 3. TODAY'S ACTIONABLE DECISION CARD */}
-      <div className="bg-[#0F172A] p-6 border-4 border-blue-500 shadow-[8px_8px_0px_0px_#3B82F6] space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <span className="px-3 py-1 bg-[#FACC15] text-slate-950 text-xs font-black uppercase tracking-wider border-2 border-slate-950 font-mono shadow-[2px_2px_0px_0px_#020617]">
-              ⚡ BEST NEXT DECISION
-            </span>
-            <span className="text-xs text-slate-300 font-mono font-bold hidden sm:inline">• LangGraph Agent Synthesized</span>
+          <div className="hidden md:flex items-center gap-8 font-mono text-xs font-black uppercase tracking-wider">
+            <a href="#features" className="hover:text-yellow-400 transition">Features</a>
+            <a href="#architecture" className="hover:text-cyan-400 transition">Architecture</a>
+            <a href="#demo" className="hover:text-purple-400 transition">Live Demo</a>
+            <a href="#stack" className="hover:text-green-400 transition">Tech Stack</a>
           </div>
 
-          <button
-            onClick={() => setIsExplainOpen(true)}
-            className="text-xs font-black text-slate-950 bg-[#A855F7] hover:bg-purple-400 px-3 py-1.5 border-2 border-slate-100 uppercase tracking-wider font-mono flex items-center gap-1.5 shadow-[2px_2px_0px_0px_#FACC15] transition"
-          >
-            <Info className="w-4 h-4 text-white" /> EXPLAIN EVIDENCE
-          </button>
-        </div>
-
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 bg-[#020617] p-5 border-2 border-slate-700">
-          <div className="space-y-2">
-            <h2 className="text-xl font-black text-slate-50 uppercase tracking-tight font-mono">
-              Master CockroachDB Distributed HNSW Vector Search
-            </h2>
-            <p className="text-xs text-slate-300 max-w-2xl leading-relaxed font-medium">
-              Your recent FAANG mock interview indicated a gap in vector database tuning. Completing this module will directly resolve recorded weaknesses and align your profile with senior AI Engineer role benchmarks.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-3 pt-2 font-mono">
-              <span className="text-xs text-cyan-400 font-bold flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5" /> EST: 3.5 HOURS
-              </span>
-              <span className="text-xs text-green-400 font-black flex items-center gap-1">
-                <TrendingUp className="w-3.5 h-3.5" /> IMPACT: +8 CAREER SCORE
-              </span>
-              <span className="text-xs text-purple-300 font-black px-2 py-0.5 bg-[#A855F7]/20 border border-purple-500 uppercase">
-                CONFIDENCE: 96%
-              </span>
-            </div>
-          </div>
-
-          <div className="w-full lg:w-auto">
-            <button
-              onClick={handleSimulateStreaming}
-              disabled={isStreaming}
-              className="w-full lg:w-auto py-3 px-6 brutal-btn brutal-btn-yellow text-xs flex items-center justify-center gap-2 disabled:opacity-50"
+          <div className="flex items-center gap-3 font-mono">
+            <Link
+              href="/dashboard"
+              className="py-2.5 px-5 brutal-btn brutal-btn-yellow text-xs flex items-center gap-2"
             >
-              {isStreaming ? (
-                <>
-                  <span className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></span>
-                  EVOLVED MEMORY...
-                </>
-              ) : (
-                <>
-                  ACCEPT & START LEARNING <ArrowRight className="w-4 h-4" />
-                </>
-              )}
+              LAUNCH COMMAND CENTER <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* ─────────────────────────────────────────────────────────────────────────────
+          2. HERO SECTION - NEO-BRUTALIST IMPACT
+         ───────────────────────────────────────────────────────────────────────────── */}
+      <section className="relative px-6 pt-16 pb-20 max-w-7xl mx-auto overflow-hidden">
+        <div className="space-y-8 text-center lg:text-left">
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-[#A855F7] text-white border-2 border-slate-100 text-xs font-black uppercase tracking-wider font-mono shadow-[4px_4px_0px_0px_#FACC15]">
+            <Sparkles className="w-4 h-4 text-yellow-300 animate-spin" />
+            <span>WORLD'S FIRST LIFELONG AI CAREER ENGINE</span>
+          </div>
+
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-50 uppercase font-mono leading-[1.05]">
+            YOUR CAREER HAS A <span className="text-[#FACC15] bg-[#0F172A] px-3 py-1 border-4 border-slate-100 inline-block shadow-[6px_6px_0px_0px_#3B82F6]">DNA.</span>
+            <br />
+            LET AI EVOLVE IT <span className="text-[#06B6D4] underline underline-offset-8">CONTINUOUSLY.</span>
+          </h1>
+
+          <p className="text-base sm:text-lg text-slate-300 font-medium max-w-3xl leading-relaxed font-sans">
+            CareerDNA AI synthesizes your resume, GitHub commits, mock interview logs, and certifications into a persistent CockroachDB vector state machine powered by a 10-node LangGraph agent network and AWS Bedrock.
+          </p>
+
+          {/* Hero Action Buttons */}
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 font-mono">
+            <Link
+              href="/dashboard"
+              className="py-4 px-8 brutal-btn brutal-btn-yellow text-sm flex items-center gap-3 text-slate-950 font-black"
+            >
+              LAUNCH COMMAND CENTER <ArrowRight className="w-5 h-5" />
+            </Link>
+            <a
+              href="#architecture"
+              className="py-4 px-6 bg-[#0F172A] border-4 border-slate-700 hover:border-cyan-400 text-slate-100 text-sm font-black uppercase flex items-center gap-2 shadow-[4px_4px_0px_0px_#020617] transition"
+            >
+              <Terminal className="w-5 h-5 text-cyan-400" /> VIEW ARCHITECTURE SPEC
+            </a>
+          </div>
+        </div>
+
+        {/* Hero Interactive Proof Box */}
+        <div className="mt-12 p-8 bg-[#0F172A] border-4 border-slate-100 shadow-[10px_10px_0px_0px_#3B82F6] grid grid-cols-1 md:grid-cols-3 gap-6 font-mono">
+          <div className="p-4 bg-[#020617] border-2 border-yellow-400 shadow-[3px_3px_0px_0px_#FACC15]">
+            <p className="text-[10px] text-slate-400 font-black uppercase">Persistent Career Score</p>
+            <p className="text-4xl font-black font-mono text-slate-50 mt-1">
+              87 <span className="text-xs text-green-400 font-bold">↑ +3 W/W</span>
+            </p>
+            <p className="text-[9px] text-yellow-400 font-bold mt-1 uppercase">Ebbinghaus Retention Applied</p>
+          </div>
+
+          <div className="p-4 bg-[#020617] border-2 border-purple-500 shadow-[3px_3px_0px_0px_#A855F7]">
+            <p className="text-[10px] text-slate-400 font-black uppercase">CockroachDB Vector Search</p>
+            <p className="text-4xl font-black font-mono text-purple-400 mt-1">
+              &lt; 48ms
+            </p>
+            <p className="text-[9px] text-purple-300 font-bold mt-1 uppercase">HNSW 1024d Embedding Query</p>
+          </div>
+
+          <div className="p-4 bg-[#020617] border-2 border-green-500 shadow-[3px_3px_0px_0px_#22C55E]">
+            <p className="text-[10px] text-slate-400 font-black uppercase">LangGraph Agent Nodes</p>
+            <p className="text-4xl font-black font-mono text-green-400 mt-1">
+              10 NODES
+            </p>
+            <p className="text-[9px] text-green-300 font-bold mt-1 uppercase">Self-Healing Intent Router</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────────────────────
+          3. FEATURE MATRIX GRID
+         ───────────────────────────────────────────────────────────────────────────── */}
+      <section id="features" className="px-6 py-16 bg-[#090D16] border-t-4 border-b-4 border-slate-800">
+        <div className="max-w-7xl mx-auto space-y-12">
+          <div className="text-center space-y-3 font-mono">
+            <span className="px-3 py-1 bg-[#3B82F6] text-white text-xs font-black uppercase border border-slate-100 shadow-[2px_2px_0px_0px_#FACC15]">
+              CORE SYSTEM CAPABILITIES
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-50 uppercase tracking-tight">
+              ENGINEERED FOR LIFELONG CAREER SOVEREIGNTY
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 font-sans">
+            {[
+              {
+                title: "Lifelong Ebbinghaus Memory Engine",
+                desc: "Never lose record of a project, cert, or interview question. Uses exponential decay formulas to calculate skill retention over time.",
+                icon: History,
+                border: "border-purple-500 shadow-[6px_6px_0px_0px_#A855F7]"
+              },
+              {
+                title: "CockroachDB HNSW Vector Search",
+                desc: "High-performance distributed SQL table indexed with 1024-dimensional embeddings for sub-50ms career context similarity lookup.",
+                icon: Database,
+                border: "border-blue-500 shadow-[6px_6px_0px_0px_#3B82F6]"
+              },
+              {
+                title: "7-Stream Career Intelligence",
+                desc: "Real-time scraper monitoring job listings, salary benchmarks, company hiring news, hackathons, and tech demand spikes.",
+                icon: Zap,
+                border: "border-yellow-400 shadow-[6px_6px_0px_0px_#FACC15]"
+              },
+              {
+                title: "10-Node LangGraph Agent Engine",
+                desc: "Modular state machine executing resume parsing, skill gap analysis, interview coaching, and automatic memory evolution.",
+                icon: Cpu,
+                border: "border-green-500 shadow-[6px_6px_0px_0px_#22C55E]"
+              },
+              {
+                title: "Explainable AI Decision Audit",
+                desc: "Zero black box advice. Every recommendation cites exact historical memory evidence and provides model confidence ratings.",
+                icon: ShieldCheck,
+                border: "border-pink-500 shadow-[6px_6px_0px_0px_#EC4899]"
+              },
+              {
+                title: "AWS Bedrock Cloud Security",
+                desc: "Enterprise infrastructure secured with KMS encryption, S3 pre-signed upload URLs, and Cognito OAuth2 tokens.",
+                icon: Lock,
+                border: "border-cyan-400 shadow-[6px_6px_0px_0px_#06B6D4]"
+              }
+            ].map((feat, idx) => {
+              const Icon = feat.icon;
+              return (
+                <div key={idx} className={`bg-[#0F172A] p-6 border-4 ${feat.border} space-y-3`}>
+                  <div className="w-12 h-12 bg-[#020617] border-2 border-slate-100 flex items-center justify-center text-yellow-400 font-black shadow-[3px_3px_0px_0px_#020617]">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-lg font-black text-slate-50 uppercase font-mono">{feat.title}</h3>
+                  <p className="text-xs text-slate-300 font-medium leading-relaxed">{feat.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────────────────────
+          4. ARCHITECTURE DEEP DIVE & TABBED DEMO
+         ───────────────────────────────────────────────────────────────────────────── */}
+      <section id="architecture" className="px-6 py-16 max-w-7xl mx-auto space-y-8 font-mono">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b-4 border-slate-800 pb-5">
+          <div>
+            <span className="px-3 py-1 bg-[#22C55E] text-slate-950 text-xs font-black uppercase border border-slate-950">
+              SYSTEM ARCHITECTURE SPECIFICATION
+            </span>
+            <h2 className="text-3xl font-black text-slate-50 uppercase mt-2">
+              HOW CAREERDNA AI PROCESSES CAREER EVENTS
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setActiveTab("memory")}
+              className={`px-4 py-2 border-2 text-xs font-black uppercase ${
+                activeTab === "memory"
+                  ? "bg-[#FACC15] text-slate-950 border-slate-950 shadow-[3px_3px_0px_0px_#020617]"
+                  : "bg-[#0F172A] text-slate-300 border-slate-700"
+              }`}
+            >
+              MEMORY EVOLUTION
+            </button>
+            <button
+              onClick={() => setActiveTab("agent")}
+              className={`px-4 py-2 border-2 text-xs font-black uppercase ${
+                activeTab === "agent"
+                  ? "bg-[#A855F7] text-white border-slate-100 shadow-[3px_3px_0px_0px_#FACC15]"
+                  : "bg-[#0F172A] text-slate-300 border-slate-700"
+              }`}
+            >
+              LANGGRAPH ROUTING
+            </button>
+            <button
+              onClick={() => setActiveTab("db")}
+              className={`px-4 py-2 border-2 text-xs font-black uppercase ${
+                activeTab === "db"
+                  ? "bg-[#3B82F6] text-white border-slate-100 shadow-[3px_3px_0px_0px_#FACC15]"
+                  : "bg-[#0F172A] text-slate-300 border-slate-700"
+              }`}
+            >
+              COCKROACHDB DDL
             </button>
           </div>
         </div>
 
-        {/* Live SSE Progress */}
-        {isStreaming && (
-          <div className="space-y-2 pt-2 animate-in fade-in font-mono">
-            <div className="flex items-center justify-between text-xs text-yellow-400 font-black uppercase">
-              <span className="flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 animate-spin text-purple-400" /> SSE Stream Execution: Evolving Career DNA...
-              </span>
-              <span>{streamProgress}%</span>
-            </div>
-            <div className="w-full bg-[#020617] h-3 border-2 border-slate-600">
-              <div
-                className="bg-[#FACC15] h-full transition-all duration-300"
-                style={{ width: `${streamProgress}%` }}
-              ></div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* 4. STORY TIMELINE & CAREER TRAJECTORY */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Story Activity Feed (2 Cols) */}
-        <div className="lg:col-span-2 bg-[#0F172A] p-6 border-4 border-slate-800 space-y-4">
-          <div className="flex items-center justify-between border-b-2 border-slate-800 pb-3">
-            <h3 className="text-sm font-black text-slate-100 uppercase tracking-wider font-mono flex items-center gap-2">
-              <Clock className="w-4 h-4 text-blue-400" /> Recent Career Milestones & Memory Shifts
-            </h3>
-            <span className="text-[10px] text-yellow-400 font-bold uppercase font-mono">Provenanced History</span>
-          </div>
-
-          <div className="space-y-3">
-            {[
-              {
-                time: "YESTERDAY",
-                title: "FAANG Mock Interview Analysis Logged",
-                desc: "AI detected weakness in System Design & Vector Indexing during mock interview.",
-                impact: "RECOMMENDATION SHIFT",
-                badge: "bg-amber-500 text-slate-950 border-slate-950"
-              },
-              {
-                time: "3 DAYS AGO",
-                title: "Completed AWS Machine Learning Specialty Cert",
-                desc: "Verified credential added to persistent memory. Technical depth score increased from 82 to 86.",
-                impact: "+4 DNA POINTS",
-                badge: "bg-green-500 text-slate-950 border-slate-950"
-              },
-              {
-                time: "5 DAYS AGO",
-                title: "Resume v3.2 Uploaded & Parsed",
-                desc: "Extracted FastAPI, LangGraph, and CockroachDB skills into database profile.",
-                impact: "PROFILE REFINED",
-                badge: "bg-blue-500 text-white border-slate-100"
-              }
-            ].map((event, i) => (
-              <div key={i} className="p-4 bg-[#020617] border-2 border-slate-700 flex items-start justify-between gap-4">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 font-mono">
-                    <span className="text-[10px] text-slate-400 font-bold">{event.time}</span>
-                    <span className="text-slate-600">•</span>
-                    <h4 className="text-xs font-black text-slate-100 uppercase">{event.title}</h4>
-                  </div>
-                  <p className="text-xs text-slate-300 font-medium">{event.desc}</p>
-                </div>
-                <span className={`text-[9px] font-black px-2.5 py-1 border uppercase whitespace-nowrap font-mono ${event.badge}`}>
-                  {event.impact}
-                </span>
+        {/* Tab Contents */}
+        <div className="bg-[#0F172A] p-6 border-4 border-slate-100 shadow-[8px_8px_0px_0px_#3B82F6]">
+          {activeTab === "memory" && (
+            <div className="space-y-4 animate-in fade-in">
+              <h3 className="text-lg font-black text-yellow-400 uppercase">Ebbinghaus Retention Decay & Vector Deduplication</h3>
+              <p className="text-xs text-slate-300 font-sans leading-relaxed">
+                Skill memory units suffer retention decay unless reinforced by project commits or mock interviews. When vector similarity between two memories exceeds 0.92, the engine automatically merges evidence records without losing historical context.
+              </p>
+              <div className="p-4 bg-[#020617] border-2 border-slate-700 text-xs font-mono text-cyan-400 space-y-1">
+                <p>Retention Formula: S(t) = min(1.0, Initial_Impact * Confidence * (1 + beta * ln(Frequency)) * e^(-lambda * t))</p>
+                <p className="text-slate-400">// Automatically triggered every 24h via scheduled background worker</p>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Trajectory Graph (1 Col) */}
-        <div className="bg-[#0F172A] p-6 border-4 border-slate-800 space-y-4 flex flex-col justify-between">
-          <div>
-            <h3 className="text-sm font-black text-slate-100 uppercase tracking-wider font-mono flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-green-400" /> Trajectory Growth
-            </h3>
-            <p className="text-xs text-slate-400 font-mono mt-1">Velocity: 1.25x vs Baseline</p>
-          </div>
-
-          <div className="space-y-3 my-4">
-            <div className="flex items-end justify-between gap-2 h-36 pt-4 px-2">
-              {[
-                { month: "JAN", score: 65, height: "h-[45%]" },
-                { month: "FEB", score: 72, height: "h-[58%]" },
-                { month: "MAR", score: 78, height: "h-[70%]" },
-                { month: "APR", score: 84, height: "h-[82%]" },
-                { month: "MAY", score: 87, height: "h-[92%]", active: true },
-              ].map((bar, idx) => (
-                <div key={idx} className="flex-1 flex flex-col items-center gap-2">
-                  <span className={`text-[10px] font-mono font-black ${bar.active ? "text-yellow-400" : "text-slate-400"}`}>
-                    {bar.score}
-                  </span>
-                  <div className="w-full bg-[#020617] border border-slate-700 relative flex items-end h-full">
-                    <div
-                      className={`w-full ${bar.height} transition-all duration-300 ${
-                        bar.active ? "bg-[#FACC15] border-t-2 border-slate-950" : "bg-slate-700"
-                      }`}
-                    ></div>
-                  </div>
-                  <span className="text-[10px] text-slate-400 font-bold font-mono">{bar.month}</span>
-                </div>
-              ))}
             </div>
-          </div>
+          )}
 
-          <div className="p-3 bg-[#020617] border-2 border-slate-700 flex items-center justify-between text-xs font-mono">
-            <span className="text-slate-400">Target Horizon</span>
-            <span className="text-yellow-400 font-black flex items-center gap-1">
-              FAANG AI Engineer <ChevronRight className="w-4 h-4 text-yellow-400" />
-            </span>
-          </div>
+          {activeTab === "agent" && (
+            <div className="space-y-4 animate-in fade-in">
+              <h3 className="text-lg font-black text-purple-400 uppercase">10-Node LangGraph State Graph Workflow</h3>
+              <p className="text-xs text-slate-300 font-sans leading-relaxed">
+                Requests route through intent classifiers: Resume Analyzer $\rightarrow$ Memory Retriever $\rightarrow$ Market Analyzer $\rightarrow$ Skill Gap Analyzer $\rightarrow$ Recommendation Generator $\rightarrow$ Interview Coach $\rightarrow$ Memory Evolution $\rightarrow$ Notification Engine.
+              </p>
+              <div className="p-4 bg-[#020617] border-2 border-slate-700 text-xs font-mono text-green-400 space-y-1">
+                <p>Nodes: [Resume, Retriever, Market, SkillGap, RecGen, LearningPlanner, Coach, Evolution, Writer, Notifier]</p>
+                <p className="text-slate-400">// Exponential backoff retries (max_retries=3) on LLM rate limits</p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "db" && (
+            <div className="space-y-4 animate-in fade-in">
+              <h3 className="text-lg font-black text-blue-400 uppercase">CockroachDB HNSW Vector Table Definition</h3>
+              <p className="text-xs text-slate-300 font-sans leading-relaxed">
+                20 relational tables with 1024-dimensional vector embeddings stored using CockroachDB's HNSW vector index format for distributed scale.
+              </p>
+              <pre className="p-4 bg-[#020617] border-2 border-slate-700 text-[11px] font-mono text-yellow-300 overflow-x-auto">
+{`CREATE TABLE career_memories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id),
+  memory_type VARCHAR(50) NOT NULL,
+  content TEXT NOT NULL,
+  embedding VECTOR(1024),
+  confidence_score FLOAT DEFAULT 1.0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+CREATE INDEX idx_embeddings_hnsw ON career_memories USING HNSW (embedding vector_cosine_ops);`}
+              </pre>
+            </div>
+          )}
         </div>
-      </div>
+      </section>
 
-      {/* EXPLAINABILITY MODAL */}
-      <ExplainModal
-        isOpen={isExplainOpen}
-        onClose={() => setIsExplainOpen(false)}
-        title="Master CockroachDB Vector Search Recommendation"
-        whyChanged="Recommendation changed from general DSA to CockroachDB HNSW Vector Search because user completed AWS ML Certification and logged a FAANG mock interview failure in vector indexing."
-        confidenceScore={0.96}
-        expectedImpact="+8 Career Score"
-        memoriesUsed={[
-          { title: "FAANG Mock Interview: Weakness in Vector DBs", date: "Yesterday", type: "INTERVIEW_FAIL" },
-          { title: "AWS ML Specialty Certification Completed", date: "3 days ago", type: "CERTIFICATE" },
-          { title: "Target Role set to Senior AI Engineer", date: "2 weeks ago", type: "CAREER_GOAL" }
-        ]}
-      />
+      {/* ─────────────────────────────────────────────────────────────────────────────
+          5. NAVIGATION CALL TO ACTION & FOOTER
+         ───────────────────────────────────────────────────────────────────────────── */}
+      <section className="px-6 pt-12 pb-8 max-w-7xl mx-auto">
+        <div className="p-10 bg-[#0F172A] border-4 border-yellow-400 shadow-[10px_10px_0px_0px_#FACC15] flex flex-col md:flex-row items-center justify-between gap-6 font-mono">
+          <div className="space-y-2 text-center md:text-left">
+            <h2 className="text-3xl font-black text-slate-50 uppercase">START EVOLVING YOUR CAREER TODAY.</h2>
+            <p className="text-xs text-slate-300 font-sans font-medium">Explore the interactive dashboard, memory graph, and decision engine feed.</p>
+          </div>
+          <Link
+            href="/dashboard"
+            className="py-4 px-8 brutal-btn brutal-btn-yellow text-sm font-black flex items-center gap-3"
+          >
+            LAUNCH COMMAND CENTER <ArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
+
+        <footer className="mt-16 pt-8 border-t-4 border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-slate-400">
+          <div className="flex items-center gap-2">
+            <span className="font-black text-slate-100">CAREERDNA AI</span>
+            <span>• Built for Software Engineers & AI Engineers</span>
+          </div>
+          <div className="flex items-center gap-6 font-bold uppercase">
+            <Link href="/dashboard" className="hover:text-yellow-400">Dashboard</Link>
+            <Link href="/career-dna" className="hover:text-purple-400">Career DNA</Link>
+            <Link href="/memory-graph" className="hover:text-cyan-400">Memory Graph</Link>
+            <Link href="/timeline" className="hover:text-green-400">Timeline</Link>
+          </div>
+        </footer>
+      </section>
     </div>
   );
 }

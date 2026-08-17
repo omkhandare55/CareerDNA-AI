@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { name: "Command Center", path: "/", icon: LayoutDashboard },
+  { name: "Command Center", path: "/dashboard", icon: LayoutDashboard },
   { name: "Career DNA", path: "/career-dna", icon: Dna },
   { name: "Memory Timeline", path: "/timeline", icon: History },
   { name: "Memory Graph", path: "/memory-graph", icon: Network },
