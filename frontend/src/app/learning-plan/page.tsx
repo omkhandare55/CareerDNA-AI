@@ -1,85 +1,79 @@
 "use client";
 
-import { GraduationCap, CheckCircle2, Clock, ArrowRight, Sparkles, BookOpen } from "lucide-react";
+import { GraduationCap, CheckCircle2, ArrowRight } from "lucide-react";
 
 export default function LearningPlanPage() {
   const steps = [
-    { title: "Core Python & Data Structures", status: "COMPLETED", duration: "2 Weeks", score: "+10 Points" },
-    { title: "FastAPI Async Web Services", status: "COMPLETED", duration: "1.5 Weeks", score: "+8 Points" },
-    { title: "AWS Machine Learning Specialty", status: "COMPLETED", duration: "3 Weeks", score: "+12 Points" },
-    { title: "CockroachDB HNSW Vector Search", status: "IN_PROGRESS", duration: "3.5 Hours Left", score: "+8 Points", active: true },
-    { title: "LangGraph State Machine Agent Systems", status: "UPCOMING", duration: "1 Week", score: "+10 Points" },
-    { title: "Distributed System Design Masterclass", status: "UPCOMING", duration: "2 Weeks", score: "+14 Points" },
+    { title: "Core Python & Data Structures", status: "COMPLETED", duration: "2 WEEKS", score: "+10 POINTS", border: "border-slate-700 shadow-[4px_4px_0px_0px_#020617]" },
+    { title: "FastAPI Async Web Services", status: "COMPLETED", duration: "1.5 WEEKS", score: "+8 POINTS", border: "border-slate-700 shadow-[4px_4px_0px_0px_#020617]" },
+    { title: "AWS Machine Learning Specialty", status: "COMPLETED", duration: "3 WEEKS", score: "+12 POINTS", border: "border-slate-700 shadow-[4px_4px_0px_0px_#020617]" },
+    { title: "CockroachDB HNSW Vector Search", status: "IN_PROGRESS", duration: "3.5 HOURS LEFT", score: "+8 POINTS", active: true, border: "border-yellow-400 shadow-[6px_6px_0px_0px_#FACC15]" },
+    { title: "LangGraph State Machine Agent Systems", status: "UPCOMING", duration: "1 WEEK", score: "+10 POINTS", border: "border-slate-700 shadow-[4px_4px_0px_0px_#020617]" },
+    { title: "Distributed System Design Masterclass", status: "UPCOMING", duration: "2 WEEKS", score: "+14 POINTS", border: "border-slate-700 shadow-[4px_4px_0px_0px_#020617]" },
   ];
 
   return (
-    <div className="space-y-8 max-w-5xl mx-auto pb-12">
+    <div className="space-y-8 max-w-5xl mx-auto pb-12 font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#1E293B] pb-5">
+      <div className="flex items-center justify-between border-b-4 border-slate-800 pb-5 font-mono">
         <div>
-          <h1 className="text-2xl font-bold text-slate-50 flex items-center gap-2.5">
-            <GraduationCap className="w-6 h-6 text-green-400" /> Personalized Learning Roadmap
+          <h1 className="text-2xl font-black text-slate-50 uppercase tracking-wider flex items-center gap-2.5">
+            <GraduationCap className="w-7 h-7 text-green-400" /> Personalized Learning Roadmap
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-400 mt-1 font-sans font-medium">
             Dynamic step-by-step path configured to reach Senior AI Engineer target role by October 2026.
           </p>
         </div>
         <div className="text-right">
-          <p className="text-xs text-slate-400 font-medium">Roadmap Progress</p>
-          <p className="text-2xl font-bold font-mono text-green-400">72%</p>
+          <p className="text-[10px] text-slate-400 font-black uppercase">Roadmap Completion</p>
+          <p className="text-3xl font-black font-mono text-green-400">72%</p>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-[#0F172A] h-3 rounded-full overflow-hidden border border-[#1E293B] p-0.5">
-        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 h-full rounded-full w-[72%] transition-all duration-500"></div>
+      <div className="w-full bg-[#020617] h-4 border-2 border-slate-700 overflow-hidden p-0.5">
+        <div className="bg-[#22C55E] h-full w-[72%] transition-all duration-500"></div>
       </div>
 
       {/* Roadmap Step Nodes */}
-      <div className="space-y-4">
+      <div className="space-y-4 font-mono">
         {steps.map((step, idx) => (
           <div
             key={idx}
-            className={`p-5 rounded-2xl border transition ${
-              step.active
-                ? "glass-panel-glow border-blue-500/40"
-                : step.status === "COMPLETED"
-                ? "glass-panel border-[#1E293B] opacity-80"
-                : "glass-panel border-[#1E293B] opacity-60"
-            }`}
+            className={`p-5 bg-[#0F172A] border-4 ${step.border} transition`}
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
+              <div className="flex items-center gap-4">
+                <div className={`w-9 h-9 border-2 flex items-center justify-center font-black text-sm ${
                   step.status === "COMPLETED"
-                    ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                    ? "bg-[#22C55E] text-slate-950 border-slate-950"
                     : step.active
-                    ? "bg-blue-500/20 text-blue-400 border border-blue-500/30 animate-pulse"
-                    : "bg-[#0F172A] text-slate-500 border border-[#1E293B]"
+                    ? "bg-[#FACC15] text-slate-950 border-slate-950 animate-pulse"
+                    : "bg-[#020617] text-slate-400 border-slate-700"
                 }`}>
                   {idx + 1}
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
+                  <h3 className="text-sm font-black text-slate-100 uppercase flex items-center gap-2">
                     {step.title}
                     {step.active && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-wider font-semibold">
-                        Current Focus
+                      <span className="text-[9px] px-2 py-0.5 bg-[#3B82F6] text-white border border-slate-100 uppercase">
+                        CURRENT FOCUS
                       </span>
                     )}
                   </h3>
-                  <p className="text-xs text-slate-400">Duration: {step.duration}</p>
+                  <p className="text-xs text-slate-400">DURATION: {step.duration}</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="text-xs font-semibold text-green-400 bg-green-500/10 px-2.5 py-1 rounded-lg border border-green-500/20">
+                <span className="text-xs font-black text-green-400 bg-[#020617] px-3 py-1 border border-slate-700">
                   {step.score}
                 </span>
                 {step.status === "COMPLETED" ? (
-                  <CheckCircle2 className="w-5 h-5 text-green-400" />
+                  <CheckCircle2 className="w-6 h-6 text-green-400" />
                 ) : (
-                  <ArrowRight className="w-5 h-5 text-slate-500" />
+                  <ArrowRight className="w-6 h-6 text-slate-500" />
                 )}
               </div>
             </div>

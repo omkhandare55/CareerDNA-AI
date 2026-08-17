@@ -2,19 +2,17 @@
 
 @layer base {
   :root {
-    --background: 2 6 23;        /* #020617 - Slate 950 */
-    --foreground: 248 250 252;   /* #F8FAFC - Slate 50 */
-    --card: 15 23 42;            /* #0F172A - Slate 900 */
+    --background: 2 6 23;        /* #020617 - Deep Stark Slate */
+    --foreground: 248 250 252;   /* #F8FAFC - Pure Slate White */
+    --card: 15 23 42;            /* #0F172A */
     --card-foreground: 248 250 252;
-    --border: 30 41 59;          /* #1E293B - Slate 800 */
-    --border-hover: 51 65 85;    /* #334155 - Slate 700 */
-    --muted: 100 116 139;        /* #64748B - Slate 500 */
-    --accent-blue: 59 130 246;   /* #3B82F6 - Primary Action */
-    --accent-purple: 139 92 246; /* #8B5CF6 - AI Intelligence & Memory */
-    --accent-cyan: 6 182 212;    /* #06B6D4 - Graph & Trajectory */
-    --status-success: 34 197 94; /* #22C55E - Growth */
-    --status-warning: 245 158 11;/* #F59E0B - Skill Gap */
-    --status-error: 239 68 68;   /* #EF4444 - Rejection / Risk */
+    --border: 51 65 85;          /* #334155 - Heavy 2px Border */
+    --accent-yellow: 250 204 21; /* #FACC15 - Neo-Brutalist Yellow */
+    --accent-cyan: 6 182 212;    /* #06B6D4 - High Contrast Cyan */
+    --accent-pink: 236 72 153;   /* #EC4899 - Neon Brutal Pink */
+    --accent-blue: 59 130 246;   /* #3B82F6 - Electric Blue */
+    --accent-purple: 168 85 247; /* #A855F7 - Vivid Purple */
+    --status-success: 34 197 94; /* #22C55E - Neo Green */
   }
 
   body {
@@ -25,25 +23,103 @@
   }
 }
 
-/* Custom Glassmorphism Utility */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(30, 41, 59, 0.8);
+/* =============================================================================
+   NEO-BRUTALISM UTILITY CLASSES
+   ============================================================================= */
+
+/* Stark Brutalist Panel */
+.brutal-card {
+  background: #0F172A;
+  border: 2px solid #334155;
+  box-shadow: 4px 4px 0px 0px #020617, 4px 4px 0px 2px #334155;
+  transition: transform 150ms ease, box-shadow 150ms ease;
 }
 
-.glass-panel-glow {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.15);
+.brutal-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #020617, 6px 6px 0px 2px #3B82F6;
+}
+
+/* High Contrast Accent Brutal Panels */
+.brutal-card-yellow {
+  background: #0F172A;
+  border: 2px solid #FACC15;
+  box-shadow: 4px 4px 0px 0px #FACC15;
+}
+
+.brutal-card-purple {
+  background: #0F172A;
+  border: 2px solid #A855F7;
+  box-shadow: 4px 4px 0px 0px #A855F7;
+}
+
+.brutal-card-cyan {
+  background: #0F172A;
+  border: 2px solid #06B6D4;
+  box-shadow: 4px 4px 0px 0px #06B6D4;
+}
+
+.brutal-card-pink {
+  background: #0F172A;
+  border: 2px solid #EC4899;
+  box-shadow: 4px 4px 0px 0px #EC4899;
+}
+
+/* Tactile Neo-Brutalist Buttons */
+.brutal-btn {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid #F8FAFC;
+  background: #3B82F6;
+  color: #FFFFFF;
+  box-shadow: 3px 3px 0px 0px #F8FAFC;
+  transition: all 120ms ease;
+}
+
+.brutal-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px 0px #F8FAFC;
+}
+
+.brutal-btn:active {
+  transform: translate(0px, 0px);
+  box-shadow: 0px 0px 0px 0px #F8FAFC;
+}
+
+.brutal-btn-yellow {
+  background: #FACC15;
+  color: #020617;
+  border: 2px solid #020617;
+  box-shadow: 3px 3px 0px 0px #020617;
+}
+
+.brutal-btn-yellow:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px 0px #020617;
+}
+
+.brutal-btn-purple {
+  background: #A855F7;
+  color: #FFFFFF;
+  border: 2px solid #F8FAFC;
+  box-shadow: 3px 3px 0px 0px #F8FAFC;
+}
+
+/* Neo-Brutalist Tag Badges */
+.brutal-badge {
+  font-family: monospace;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1.5px solid currentColor;
+  box-shadow: 2px 2px 0px 0px currentColor;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -51,10 +127,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1E293B;
-  border-radius: 9999px;
+  background: #334155;
+  border: 1px solid #F8FAFC;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #3B82F6;
 }

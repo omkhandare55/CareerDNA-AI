@@ -1,6 +1,6 @@
 "use client";
 
-import { X, Sparkles, Database, ShieldCheck, CheckCircle2, History, ArrowRight } from "lucide-react";
+import { X, Sparkles, ShieldCheck, CheckCircle2, History, ArrowRight } from "lucide-react";
 
 interface ExplainModalProps {
   isOpen: boolean;
@@ -24,22 +24,24 @@ export default function ExplainModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-xl glass-panel-glow rounded-2xl border border-blue-500/30 p-6 shadow-2xl text-slate-100 space-y-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-150">
+      <div className="relative w-full max-w-xl bg-[#0F172A] border-4 border-slate-100 p-6 shadow-[8px_8px_0px_0px_#A855F7] text-slate-100 space-y-6 font-sans">
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-[#1E293B] pb-4">
+        <div className="flex items-start justify-between border-b-4 border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+            <div className="p-2.5 bg-[#A855F7] text-white border-2 border-slate-100 font-black shadow-[2px_2px_0px_0px_#FACC15]">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-50">{title}</h3>
-              <p className="text-xs text-slate-400">Explainable AI • Memory Evidence Provenance</p>
+              <h3 className="text-base font-black text-slate-50 uppercase tracking-wider font-mono">{title}</h3>
+              <p className="text-[10px] text-yellow-400 font-bold uppercase tracking-widest font-mono">
+                Explainable AI • Memory Evidence Provenance
+              </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-[#1E293B] transition"
+            className="p-1.5 bg-[#020617] border-2 border-slate-600 hover:border-red-400 text-slate-300 hover:text-red-400 transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -47,62 +49,62 @@ export default function ExplainModal({
 
         {/* Reason / Why Changed */}
         <div className="space-y-2">
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-purple-400 flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4" /> Why This Recommendation Changed
+          <h4 className="text-xs font-black uppercase tracking-wider text-purple-400 font-mono flex items-center gap-1.5">
+            <ShieldCheck className="w-4 h-4 text-purple-400" /> Why This Recommendation Changed
           </h4>
-          <p className="text-sm text-slate-300 bg-[#0F172A] p-3.5 rounded-xl border border-[#1E293B] leading-relaxed">
+          <p className="text-xs text-slate-200 bg-[#020617] p-4 border-2 border-purple-500 shadow-[3px_3px_0px_0px_#A855F7] leading-relaxed font-medium">
             {whyChanged}
           </p>
         </div>
 
         {/* Evidence / Memories Used */}
         <div className="space-y-3">
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-blue-400 flex items-center gap-1.5">
-            <History className="w-4 h-4" /> CockroachDB Memory Evidence Used
+          <h4 className="text-xs font-black uppercase tracking-wider text-cyan-400 font-mono flex items-center gap-1.5">
+            <History className="w-4 h-4 text-cyan-400" /> CockroachDB Memory Evidence Used
           </h4>
           <div className="space-y-2">
             {memoriesUsed.map((mem, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between p-3 rounded-lg bg-[#0F172A]/70 border border-[#1E293B] text-xs"
+                className="flex items-center justify-between p-3 bg-[#020617] border-2 border-slate-700 text-xs font-mono"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono text-[10px] border border-blue-500/20">
+                  <span className="px-2 py-0.5 bg-[#3B82F6] text-white font-black text-[9px] border border-slate-100 uppercase">
                     {mem.type}
                   </span>
-                  <span className="text-slate-200 font-medium">{mem.title}</span>
+                  <span className="text-slate-100 font-bold">{mem.title}</span>
                 </div>
-                <span className="text-[11px] text-slate-400">{mem.date}</span>
+                <span className="text-[10px] text-yellow-400 font-bold">{mem.date}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Confidence & Impact Footer */}
-        <div className="grid grid-cols-2 gap-4 pt-2 border-t border-[#1E293B]">
-          <div className="p-3 rounded-xl bg-[#0F172A] border border-[#1E293B] flex items-center justify-between">
+        <div className="grid grid-cols-2 gap-4 pt-2 border-t-4 border-slate-800">
+          <div className="p-3 bg-[#020617] border-2 border-purple-500 shadow-[3px_3px_0px_0px_#A855F7] flex items-center justify-between">
             <div>
-              <p className="text-[10px] text-slate-400 font-medium uppercase">Model Confidence</p>
-              <p className="text-base font-bold text-purple-400">{(confidenceScore * 100).toFixed(0)}%</p>
+              <p className="text-[9px] text-slate-400 font-black uppercase font-mono">Model Confidence</p>
+              <p className="text-lg font-black font-mono text-purple-400">{(confidenceScore * 100).toFixed(0)}%</p>
             </div>
-            <CheckCircle2 className="w-5 h-5 text-purple-400" />
+            <CheckCircle2 className="w-6 h-6 text-purple-400" />
           </div>
 
-          <div className="p-3 rounded-xl bg-[#0F172A] border border-[#1E293B] flex items-center justify-between">
+          <div className="p-3 bg-[#020617] border-2 border-green-500 shadow-[3px_3px_0px_0px_#22C55E] flex items-center justify-between">
             <div>
-              <p className="text-[10px] text-slate-400 font-medium uppercase">Expected Impact</p>
-              <p className="text-base font-bold text-green-400">{expectedImpact}</p>
+              <p className="text-[9px] text-slate-400 font-black uppercase font-mono">Expected Impact</p>
+              <p className="text-lg font-black font-mono text-green-400">{expectedImpact}</p>
             </div>
-            <ArrowRight className="w-5 h-5 text-green-400" />
+            <ArrowRight className="w-6 h-6 text-green-400" />
           </div>
         </div>
 
         {/* Dismiss CTA */}
         <button
           onClick={onClose}
-          className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition shadow-lg shadow-blue-500/20"
+          className="w-full py-3 brutal-btn brutal-btn-yellow text-xs font-black tracking-wider uppercase"
         >
-          Understood • Close Analysis
+          UNDERSTOOD • CLOSE ANALYSIS
         </button>
       </div>
     </div>

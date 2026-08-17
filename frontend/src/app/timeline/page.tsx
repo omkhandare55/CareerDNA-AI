@@ -1,104 +1,95 @@
 "use client";
 
-import { History, Award, Briefcase, FileText, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
+import { History, Sparkles, Filter, Calendar } from "lucide-react";
 
-export default function MemoryTimelinePage() {
+export default function TimelinePage() {
   const events = [
     {
-      year: "2026",
-      date: "August 4, 2026",
-      title: "Google Mock Interview Completed",
-      summary: "Evaluated on System Design & Vector Indexing. Identified weakness in distributed lock tuning.",
-      type: "INTERVIEW_FAIL",
-      confidence: "94%",
-      impact: "Recommendation Changed"
+      date: "AUGUST 15, 2026",
+      type: "INTERVIEW_LOG",
+      title: "FAANG Mock Interview: System Design & Vector Storage",
+      desc: "Detailed evaluation of multi-region read/write latency. Mock interviewer highlighted gap in CockroachDB Raft leaseholder tuning.",
+      confidence: "96% Confidence",
+      impact: "+2 DNA Score Shift",
+      color: "border-amber-400 shadow-[4px_4px_0px_0px_#FACC15]"
     },
     {
-      year: "2026",
-      date: "August 1, 2026",
-      title: "AWS Machine Learning Specialty Certification",
-      summary: "Passed official AWS exam. Verified ML infrastructure & model deployment capabilities.",
+      date: "JULY 28, 2026",
       type: "CERTIFICATE",
-      confidence: "99%",
-      impact: "+4 DNA Score"
+      title: "AWS Certified Machine Learning – Specialty Passed",
+      desc: "Official credential issued by Amazon Web Services. Machine learning architecture proficiency verified.",
+      confidence: "99% Confidence",
+      impact: "+6 DNA Score Shift",
+      color: "border-green-500 shadow-[4px_4px_0px_0px_#22C55E]"
     },
     {
-      year: "2026",
-      date: "July 20, 2026",
-      title: "Built CareerDNA AI Prototype",
-      summary: "Integrated LangGraph agent framework with CockroachDB distributed vector index.",
-      type: "PROJECT",
-      confidence: "95%",
-      impact: "+8 Career Score"
+      date: "JUNE 10, 2026",
+      type: "PROJECT_COMMIT",
+      title: "Built Agentic Career DNA Memory Engine",
+      desc: "Designed Ebbinghaus decay math engine with vector duplicate merging and CockroachDB vector index schema.",
+      confidence: "94% Confidence",
+      impact: "+8 DNA Score Shift",
+      color: "border-purple-500 shadow-[4px_4px_0px_0px_#A855F7]"
     },
     {
-      year: "2026",
-      date: "June 15, 2026",
-      title: "Resume Version 3.2 Uploaded & Parsed",
-      summary: "Extracted FastAPI, Python, and SQL skills into persistent database state.",
-      type: "RESUME",
-      confidence: "92%",
-      impact: "DNA Profile Refined"
-    },
-    {
-      year: "2025",
-      date: "December 10, 2025",
-      title: "Completed 500 LeetCode Problems milestone",
-      summary: "Demonstrated high proficiency in Graphs, Dynamic Programming, and Heaps.",
-      type: "LEARNING",
-      confidence: "96%",
-      impact: "+6 DNA Score"
+      date: "MAY 02, 2026",
+      type: "RESUME_PARSED",
+      title: "Uploaded Resume v3.1",
+      desc: "Extracted 34 core skills and historical trajectory from PDF resume.",
+      confidence: "92% Confidence",
+      impact: "+4 DNA Score Shift",
+      color: "border-blue-500 shadow-[4px_4px_0px_0px_#3B82F6]"
     }
   ];
 
   return (
-    <div className="space-y-8 max-w-5xl mx-auto pb-12">
+    <div className="space-y-8 max-w-5xl mx-auto pb-12 font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#1E293B] pb-5">
+      <div className="flex flex-wrap items-center justify-between border-b-4 border-slate-800 pb-5 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-50 flex items-center gap-2.5">
-            <History className="w-6 h-6 text-blue-400" /> Persistent Memory Timeline
+          <h1 className="text-2xl font-black text-slate-50 uppercase tracking-wider font-mono flex items-center gap-2.5">
+            <History className="w-7 h-7 text-cyan-400" /> Persistent Memory Timeline
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Chronological audit log of every decision, interview failure, certificate, and career milestone stored in CockroachDB.
+          <p className="text-xs text-slate-400 mt-1 font-medium">
+            Immutable audit log of career events, mock interviews, certifications, and AI memory shifts.
           </p>
         </div>
-        <div className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold">
-          Total Memory Nodes: 48
+        <div className="flex items-center gap-2 font-mono">
+          <button className="px-3 py-1.5 bg-[#0F172A] border-2 border-slate-700 hover:border-yellow-400 text-slate-200 text-xs font-black uppercase flex items-center gap-1.5">
+            <Filter className="w-3.5 h-3.5" /> Filter by Type
+          </button>
         </div>
       </div>
 
-      {/* Vertical Timeline Component */}
-      <div className="relative pl-6 space-y-8 before:absolute before:left-2.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-[#1E293B]">
-        {events.map((event, idx) => (
-          <div key={idx} className="relative flex items-start gap-6 group">
-            {/* Timeline Node Icon */}
-            <div className="absolute -left-6 top-1 w-6 h-6 rounded-full bg-[#0F172A] border-2 border-blue-500 flex items-center justify-center group-hover:scale-110 transition">
-              <span className="w-2 h-2 rounded-full bg-blue-400"></span>
-            </div>
+      {/* Timeline Stream */}
+      <div className="relative pl-6 border-l-4 border-slate-800 space-y-8 my-6">
+        {events.map((evt, idx) => (
+          <div key={idx} className="relative">
+            {/* Timeline Node Point */}
+            <div className="absolute -left-[31px] top-4 w-4 h-4 bg-[#FACC15] border-2 border-slate-950 shadow-[2px_2px_0px_0px_#020617]"></div>
 
             {/* Event Card */}
-            <div className="glass-panel p-5 rounded-2xl border border-[#1E293B] w-full space-y-3 hover:border-slate-700 transition">
-              <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className={`bg-[#0F172A] p-6 border-2 ${evt.color} space-y-3`}>
+              <div className="flex flex-wrap items-center justify-between gap-2 font-mono">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400 font-mono">{event.date}</span>
-                  <span className="text-slate-600">•</span>
-                  <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px] font-mono border border-blue-500/20">
-                    {event.type}
+                  <span className="px-2 py-0.5 bg-[#020617] text-yellow-400 text-[10px] font-black border border-slate-700 flex items-center gap-1 uppercase">
+                    <Calendar className="w-3 h-3 text-cyan-400" /> {evt.date}
+                  </span>
+                  <span className="px-2 py-0.5 bg-[#3B82F6] text-white text-[10px] font-black border border-slate-100 uppercase">
+                    {evt.type}
                   </span>
                 </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-purple-300 font-medium">Confidence: {event.confidence}</span>
-                  <span className="text-xs font-semibold text-green-400 bg-green-500/10 px-2.5 py-0.5 rounded-full border border-green-500/20">
-                    {event.impact}
-                  </span>
-                </div>
+                <span className="text-xs font-black text-green-400">{evt.impact}</span>
               </div>
 
               <div>
-                <h3 className="text-sm font-bold text-slate-100">{event.title}</h3>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{event.summary}</p>
+                <h3 className="text-base font-black text-slate-50 uppercase tracking-tight font-mono">{evt.title}</h3>
+                <p className="text-xs text-slate-300 mt-1 font-medium leading-relaxed">{evt.desc}</p>
+              </div>
+
+              <div className="pt-2 border-t-2 border-slate-800 flex justify-between items-center text-[10px] font-mono text-slate-400">
+                <span>VERIFIED PROVENANCE LOG</span>
+                <span className="text-purple-400 font-bold">{evt.confidence}</span>
               </div>
             </div>
           </div>

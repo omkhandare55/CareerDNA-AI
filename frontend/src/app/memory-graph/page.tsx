@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Network, Sparkles, Database, Info, Layers, ZoomIn, ZoomOut, RefreshCw } from "lucide-react";
+import { Network, ZoomIn, ZoomOut, RefreshCw, Info, Layers } from "lucide-react";
 
 interface NodeData {
   id: string;
@@ -36,25 +36,25 @@ export default function MemoryGraphPage() {
   ];
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12 font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#1E293B] pb-5">
+      <div className="flex items-center justify-between border-b-4 border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl font-bold text-slate-50 flex items-center gap-2.5">
-            <Network className="w-6 h-6 text-cyan-400" /> CockroachDB Memory Graph Network
+          <h1 className="text-2xl font-black text-slate-50 uppercase tracking-wider font-mono flex items-center gap-2.5">
+            <Network className="w-7 h-7 text-cyan-400" /> Memory Graph Network Visualization
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-400 mt-1 font-medium">
             Visualizing directed memory relationships (`CAUSED_BY`, `SUPERSEDES`, `IMPROVED_BY`) across career milestones.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <button className="p-2 rounded-lg bg-[#0F172A] border border-[#1E293B] text-slate-300 hover:text-white transition">
+        <div className="flex items-center gap-2 font-mono">
+          <button className="p-2 bg-[#0F172A] border-2 border-slate-700 hover:border-yellow-400 text-slate-200 shadow-[2px_2px_0px_0px_#020617]">
             <ZoomIn className="w-4 h-4" />
           </button>
-          <button className="p-2 rounded-lg bg-[#0F172A] border border-[#1E293B] text-slate-300 hover:text-white transition">
+          <button className="p-2 bg-[#0F172A] border-2 border-slate-700 hover:border-yellow-400 text-slate-200 shadow-[2px_2px_0px_0px_#020617]">
             <ZoomOut className="w-4 h-4" />
           </button>
-          <button className="p-2 rounded-lg bg-[#0F172A] border border-[#1E293B] text-slate-300 hover:text-white transition">
+          <button className="p-2 bg-[#0F172A] border-2 border-slate-700 hover:border-yellow-400 text-slate-200 shadow-[2px_2px_0px_0px_#020617]">
             <RefreshCw className="w-4 h-4" />
           </button>
         </div>
@@ -62,7 +62,7 @@ export default function MemoryGraphPage() {
 
       {/* Interactive SVG Network Canvas */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 glass-panel p-6 rounded-2xl border border-[#1E293B] relative min-h-[480px] flex items-center justify-center overflow-hidden">
+        <div className="lg:col-span-2 bg-[#0F172A] p-6 border-4 border-slate-800 shadow-[8px_8px_0px_0px_#06B6D4] relative min-h-[480px] flex items-center justify-center overflow-hidden">
           <svg className="w-full h-[450px]" viewBox="0 0 800 480">
             {/* Edges */}
             {edges.map((edge, idx) => {
@@ -75,9 +75,9 @@ export default function MemoryGraphPage() {
                   y1={sourceNode.y}
                   x2={targetNode.x}
                   y2={targetNode.y}
-                  stroke="#334155"
-                  strokeWidth="2"
-                  strokeDasharray="4 4"
+                  stroke="#475569"
+                  strokeWidth="3"
+                  strokeDasharray="6 6"
                 />
               );
             })}
@@ -87,10 +87,10 @@ export default function MemoryGraphPage() {
               const isSelected = selectedNode?.id === node.id;
               const getColor = () => {
                 switch (node.category) {
-                  case "GOAL": return "fill-purple-500 stroke-purple-300";
-                  case "SKILL": return "fill-blue-500 stroke-blue-300";
-                  case "INTERVIEW": return "fill-amber-500 stroke-amber-300";
-                  case "CERT": return "fill-emerald-500 stroke-emerald-300";
+                  case "GOAL": return "fill-[#A855F7] stroke-white";
+                  case "SKILL": return "fill-[#3B82F6] stroke-white";
+                  case "INTERVIEW": return "fill-[#FACC15] stroke-slate-950";
+                  case "CERT": return "fill-[#22C55E] stroke-white";
                 }
               };
 
@@ -103,16 +103,16 @@ export default function MemoryGraphPage() {
                   <circle
                     cx={node.x}
                     cy={node.y}
-                    r={isSelected ? "22" : "18"}
-                    className={`${getColor()} transition-all duration-200 opacity-90 group-hover:opacity-100 ${
-                      isSelected ? "stroke-[4px]" : "stroke-2"
+                    r={isSelected ? "24" : "20"}
+                    className={`${getColor()} transition-all duration-150 stroke-[3px] filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] ${
+                      isSelected ? "stroke-[5px]" : ""
                     }`}
                   />
                   <text
                     x={node.x}
-                    y={node.y + 34}
+                    y={node.y + 36}
                     textAnchor="middle"
-                    className="fill-slate-200 text-[11px] font-semibold tracking-tight"
+                    className="fill-slate-100 text-[11px] font-black tracking-wider uppercase font-mono"
                   >
                     {node.label}
                   </text>
@@ -122,45 +122,45 @@ export default function MemoryGraphPage() {
           </svg>
 
           {/* Graph Legend */}
-          <div className="absolute bottom-4 left-4 flex items-center gap-4 bg-[#0F172A]/90 p-2.5 rounded-xl border border-[#1E293B] text-[11px]">
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span> Goal</span>
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Skill</span>
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Interview</span>
-            <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Certificate</span>
+          <div className="absolute bottom-4 left-4 flex items-center gap-4 bg-[#020617] p-3 border-2 border-slate-700 text-[10px] font-black uppercase font-mono shadow-[3px_3px_0px_0px_#020617]">
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[#A855F7] border border-white"></span> Goal</span>
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[#3B82F6] border border-white"></span> Skill</span>
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[#FACC15] border border-slate-950"></span> Interview</span>
+            <span className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[#22C55E] border border-white"></span> Cert</span>
           </div>
         </div>
 
         {/* Selected Node Details Drawer */}
-        <div className="glass-panel p-6 rounded-2xl border border-[#1E293B] space-y-4">
-          <h3 className="text-sm font-bold text-slate-100 uppercase tracking-wider flex items-center gap-2">
-            <Info className="w-4 h-4 text-cyan-400" /> Node Inspection
+        <div className="bg-[#0F172A] p-6 border-4 border-slate-800 shadow-[8px_8px_0px_0px_#EC4899] space-y-4 font-mono">
+          <h3 className="text-xs font-black text-slate-100 uppercase tracking-wider flex items-center gap-2">
+            <Info className="w-4 h-4 text-cyan-400" /> Node Inspection Drawer
           </h3>
 
           {selectedNode ? (
             <div className="space-y-4 animate-in fade-in">
-              <div className="p-4 rounded-xl bg-[#0F172A] border border-[#1E293B] space-y-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+              <div className="p-4 bg-[#020617] border-2 border-slate-700 space-y-2">
+                <span className="text-[9px] font-black px-2 py-0.5 bg-[#3B82F6] text-white border border-slate-100 uppercase">
                   {selectedNode.category} NODE
                 </span>
-                <h4 className="text-sm font-bold text-slate-50">{selectedNode.label}</h4>
-                <p className="text-xs text-slate-400">{selectedNode.evidence}</p>
+                <h4 className="text-sm font-black text-slate-50 uppercase">{selectedNode.label}</h4>
+                <p className="text-xs text-slate-300 font-sans">{selectedNode.evidence}</p>
               </div>
 
               <div className="space-y-2 text-xs">
-                <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#0F172A] border border-[#1E293B]">
-                  <span className="text-slate-400">Confidence Score</span>
-                  <span className="font-bold text-purple-400">{(selectedNode.confidence * 100).toFixed(0)}%</span>
+                <div className="flex items-center justify-between p-3 bg-[#020617] border-2 border-slate-700">
+                  <span className="text-slate-400 font-bold">Confidence Score</span>
+                  <span className="font-black text-purple-400">{(selectedNode.confidence * 100).toFixed(0)}%</span>
                 </div>
-                <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#0F172A] border border-[#1E293B]">
-                  <span className="text-slate-400">Data Source</span>
-                  <span className="font-mono text-slate-200">{selectedNode.source}</span>
+                <div className="flex items-center justify-between p-3 bg-[#020617] border-2 border-slate-700">
+                  <span className="text-slate-400 font-bold">Data Source</span>
+                  <span className="font-mono text-yellow-400 font-bold">{selectedNode.source}</span>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="text-center py-12 text-slate-400 text-xs space-y-2">
+            <div className="text-center py-12 text-slate-400 text-xs space-y-2 font-sans">
               <Layers className="w-8 h-8 mx-auto text-slate-600" />
-              <p>Click any memory node in the network to inspect its relationships and evidence provenance.</p>
+              <p className="font-mono font-bold uppercase">Click any memory node in the network to inspect evidence provenance.</p>
             </div>
           )}
         </div>
