@@ -10,7 +10,7 @@
     },
     {
       "test": "POST /api/v1/auth/register",
-      "detail": "User registered (ID: 5dedb8ad-8307-45de-94f0-a1c3fc05c708) with Bearer token"
+      "detail": "User registered (ID: f635a2b5-9973-4175-b527-43f5c3e78fc8) with Bearer token"
     },
     {
       "test": "POST /api/v1/auth/login",
@@ -18,7 +18,7 @@
     },
     {
       "test": "GET /api/v1/auth/me",
-      "detail": "Authenticated as test_auditor_1787037930@careerdna.ai (Lead AI Engineer)"
+      "detail": "Authenticated as test_auditor_1787038511@careerdna.ai (Lead AI Engineer)"
     },
     {
       "test": "GET /api/v1/dna",
@@ -30,10 +30,10 @@
     },
     {
       "test": "POST /api/v1/skills",
-      "detail": "Created skill 31c07dff-b218-4e4e-b262-33499dab9f97"
+      "detail": "Created skill 7e0bc685-5dd8-4a9d-99d3-200a25f58e95"
     },
     {
-      "test": "DELETE /api/v1/skills/31c07dff-b218-4e4e-b262-33499dab9f97",
+      "test": "DELETE /api/v1/skills/7e0bc685-5dd8-4a9d-99d3-200a25f58e95",
       "detail": "Skill deleted successfully"
     },
     {
@@ -46,7 +46,7 @@
     },
     {
       "test": "POST /api/v1/memory",
-      "detail": "Created memory node 320a3196-efc2-4aac-92b9-36a489717495"
+      "detail": "Created memory node 7acf7fc1-7649-4ab2-9afd-3f31d494b63c"
     },
     {
       "test": "GET /api/v1/interviews",
@@ -58,10 +58,10 @@
     },
     {
       "test": "POST /api/v1/learning",
-      "detail": "Created learning course 93fdf732-062e-4ad8-9ee7-f692f3dd9484"
+      "detail": "Created learning course 5117eb06-ee83-45e1-b272-4f11a9d0a936"
     },
     {
-      "test": "PATCH /api/v1/learning/93fdf732-062e-4ad8-9ee7-f692f3dd9484",
+      "test": "PATCH /api/v1/learning/5117eb06-ee83-45e1-b272-4f11a9d0a936",
       "detail": "Course completed"
     },
     {
@@ -69,12 +69,12 @@
       "detail": "Total Notifications: 3"
     },
     {
-      "test": "PATCH /api/v1/notifications/33e15145-3251-4d73-b8bb-d978d74d9809/read",
+      "test": "PATCH /api/v1/notifications/0f2f59fe-4c16-486a-9acc-1c77e19643f7/read",
       "detail": "Marked notification as read"
     },
     {
       "test": "POST /api/v1/documents/presigned-url",
-      "detail": "Upload URL generated: resumes/5dedb8ad-8307-45de-94f0-a1c3fc05c708/e33a939a-f8b7-4567-b8a0-cc892b4682fc_my_resume_2026.pdf"
+      "detail": "Upload URL generated: resumes/f635a2b5-9973-4175-b527-43f5c3e78fc8/d7710f19-80ec-4cc5-afdf-6424512a4e49_my_resume_2026.pdf"
     },
     {
       "test": "POST /api/v1/agent/recommend (SSE)",
