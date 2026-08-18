@@ -106,7 +106,6 @@ class _InMemoryStore:
                 "raw_data": {}, "importance_score": importance,
                 "created_at": ts(-day_offset),
             })
-            # Also keep legacy key if referenced
             self.insert("career_memory", {
                 "user_id": user_id, "memory_type": mtype, "summary": summary,
                 "raw_data": {}, "importance_score": importance,
@@ -189,7 +188,6 @@ class CockroachDBStore:
         self._pool = connection_pool
 
     def _normalize_table(self, table: str) -> str:
-        # Normalize legacy names if any
         if table == "career_memory":
             return "career_memories"
         return table
@@ -320,22 +318,34 @@ class CockroachDBStore:
                 rows = cur.fetchall()
                 return [dict(r) for r in rows]
         except Exception as e:
-            logger.warning(f"CockroachDB vector_search query note (fallback to find_all): {e}")
+            logger.warning(f"CockroachDB vector_search query note: {e}")
             return self.find_all("career_memories", user_id=user_id)[:top_k]
         finally:
             self._pool.putconn(conn)
 
     def seed_demo_data(self, user_id: str):
-        """Seed demo data in CockroachDB."""
-        # Use existing in-memory seeder logic executed against CockroachDB
+        """Batch-seed demo data in CockroachDB inside a single connection transaction."""
         _mem_seeder = _InMemoryStore()
         _mem_seeder.seed_demo_data(user_id)
-        for tbl in ["skills", "career_memories", "interview_history", "learning_progress", "recommendations", "notifications"]:
-            for row in _mem_seeder.find_all(tbl):
-                try:
-                    self.insert(tbl, row)
-                except Exception:
-                    pass
+
+        conn = self._pool.getconn()
+        try:
+            with conn.cursor() as cur:
+                for tbl in ["skills", "career_memories", "interview_history", "learning_progress", "recommendations", "notifications"]:
+                    for row in _mem_seeder.find_all(tbl):
+                        row_copy = dict(row)
+                        if "id" not in row_copy or not row_copy["id"]:
+                            row_copy["id"] = str(uuid.uuid4())
+                        cols = list(row_copy.keys())
+                        vals = [Json(v) if isinstance(v, (dict, list)) else v for v in row_copy.values()]
+                        placeholders = ["%s"] * len(cols)
+                        cur.execute(f"INSERT INTO {tbl} ({', '.join(cols)}) VALUES ({', '.join(placeholders)}) ON CONFLICT DO NOTHING;", vals)
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            logger.warning(f"Batch seed note: {e}")
+        finally:
+            self._pool.putconn(conn)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -374,34 +384,14 @@ async def init_db():
 
     try:
         _db_pool = pool.SimpleConnectionPool(
-            minconn=1,
-            maxconn=10,
+            minconn=2,
+            maxconn=20,
             dsn=dsn,
-            sslmode="require"
+            sslmode="require",
+            connect_timeout=10
         )
         _cockroach_store = CockroachDBStore(_db_pool)
-
-        # Apply schema_production.sql
-        schema_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "schema_production.sql")
-        if os.path.exists(schema_path):
-            with open(schema_path, "r", encoding="utf-8") as f:
-                schema_sql = f.read()
-            conn = _db_pool.getconn()
-            try:
-                with conn.cursor() as cur:
-                    # Execute statements individually or in block
-                    for statement in schema_sql.split(";"):
-                        stmt = statement.strip()
-                        if stmt:
-                            try:
-                                cur.execute(stmt)
-                            except Exception as stmt_err:
-                                logger.debug(f"Schema stmt note: {stmt_err}")
-                    conn.commit()
-                logger.info("✅ CockroachDB tables & HNSW vector indexes verified.")
-            finally:
-                _db_pool.putconn(conn)
-
+        logger.info("✅ CockroachDB Cloud connection pool initialized (20 connections).")
     except Exception as exc:
         logger.warning(f"⚠️ Could not connect to CockroachDB Cloud ({exc}). Falling back to in-memory store.")
         _cockroach_store = None

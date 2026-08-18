@@ -9,78 +9,6 @@
       "detail": "Status: healthy"
     },
     {
-      "test": "POST /api/v1/auth/register",
-      "detail": "User registered (ID: f635a2b5-9973-4175-b527-43f5c3e78fc8) with Bearer token"
-    },
-    {
-      "test": "POST /api/v1/auth/login",
-      "detail": "Token refreshed: eyJhbGciOiJIUzI1NiIs..."
-    },
-    {
-      "test": "GET /api/v1/auth/me",
-      "detail": "Authenticated as test_auditor_1787038511@careerdna.ai (Lead AI Engineer)"
-    },
-    {
-      "test": "GET /api/v1/dna",
-      "detail": "DNA Score: 56"
-    },
-    {
-      "test": "GET /api/v1/skills",
-      "detail": "Total Skills: 10"
-    },
-    {
-      "test": "POST /api/v1/skills",
-      "detail": "Created skill 7e0bc685-5dd8-4a9d-99d3-200a25f58e95"
-    },
-    {
-      "test": "DELETE /api/v1/skills/7e0bc685-5dd8-4a9d-99d3-200a25f58e95",
-      "detail": "Skill deleted successfully"
-    },
-    {
-      "test": "GET /api/v1/timeline",
-      "detail": "Total Events: 8"
-    },
-    {
-      "test": "GET /api/v1/memory",
-      "detail": "Total Memories: 5"
-    },
-    {
-      "test": "POST /api/v1/memory",
-      "detail": "Created memory node 7acf7fc1-7649-4ab2-9afd-3f31d494b63c"
-    },
-    {
-      "test": "GET /api/v1/interviews",
-      "detail": "Total Interviews: 2"
-    },
-    {
-      "test": "GET /api/v1/learning",
-      "detail": "Total Courses: 4"
-    },
-    {
-      "test": "POST /api/v1/learning",
-      "detail": "Created learning course 5117eb06-ee83-45e1-b272-4f11a9d0a936"
-    },
-    {
-      "test": "PATCH /api/v1/learning/5117eb06-ee83-45e1-b272-4f11a9d0a936",
-      "detail": "Course completed"
-    },
-    {
-      "test": "GET /api/v1/notifications",
-      "detail": "Total Notifications: 3"
-    },
-    {
-      "test": "PATCH /api/v1/notifications/0f2f59fe-4c16-486a-9acc-1c77e19643f7/read",
-      "detail": "Marked notification as read"
-    },
-    {
-      "test": "POST /api/v1/documents/presigned-url",
-      "detail": "Upload URL generated: resumes/f635a2b5-9973-4175-b527-43f5c3e78fc8/d7710f19-80ec-4cc5-afdf-6424512a4e49_my_resume_2026.pdf"
-    },
-    {
-      "test": "POST /api/v1/agent/recommend (SSE)",
-      "detail": "Received 24 events. Flow verified."
-    },
-    {
       "test": "calculate_decay_score()",
       "detail": "S(0)=0.81, S(30)=0.5165, S(30, F=5)=0.7243"
     },
@@ -157,6 +85,67 @@
       "detail": "HTTP 200 OK"
     }
   ],
-  "failed": [],
+  "failed": [
+    {
+      "test": "POST /api/v1/auth/register",
+      "error": "timed out"
+    },
+    {
+      "test": "POST /api/v1/auth/login",
+      "error": "timed out"
+    },
+    {
+      "test": "GET /api/v1/auth/me",
+      "error": ""
+    },
+    {
+      "test": "GET /api/v1/dna",
+      "error": ""
+    },
+    {
+      "test": "GET /api/v1/skills",
+      "error": ""
+    },
+    {
+      "test": "POST /api/v1/skills",
+      "error": ""
+    },
+    {
+      "test": "GET /api/v1/timeline",
+      "error": ""
+    },
+    {
+      "test": "GET /api/v1/memory",
+      "error": ""
+    },
+    {
+      "test": "POST /api/v1/memory",
+      "error": ""
+    },
+    {
+      "test": "GET /api/v1/interviews",
+      "error": ""
+    },
+    {
+      "test": "GET /api/v1/learning",
+      "error": ""
+    },
+    {
+      "test": "POST /api/v1/learning",
+      "error": ""
+    },
+    {
+      "test": "Notifications API",
+      "error": ""
+    },
+    {
+      "test": "Documents Presigned URL",
+      "error": ""
+    },
+    {
+      "test": "POST /api/v1/agent/recommend (SSE)",
+      "error": "SSE endpoint status 401"
+    }
+  ],
   "observations": []
 }

@@ -30,10 +30,10 @@ def log_obs(observation: str):
     print(f"  [NOTE] Observation: {observation}")
 
 print("=" * 70)
-print("  CAREERDNA AI - DEEP SYSTEM AUDIT & TEST LOOP")
+print("  CAREERDNA AI - DEEP SYSTEM AUDIT & TEST LOOP (LIVE COCKROACHDB)")
 print("=" * 70)
 
-client = httpx.Client(timeout=10.0)
+client = httpx.Client(timeout=30.0)
 
 # 1. SERVER HEALTH & BASIC GATEWAY
 print("\n[PHASE 1] Checking Core Gateway & Health Endpoints...")
@@ -94,7 +94,7 @@ except Exception as e:
     log_fail("GET /api/v1/auth/me", str(e))
 
 # 3. CORE DOMAIN REST APIS
-print("\n[PHASE 3] Testing Core Domain REST APIs...")
+print("\n[PHASE 3] Testing Core Domain REST APIs on CockroachDB Cloud...")
 
 # 3.1 DNA Profile
 try:

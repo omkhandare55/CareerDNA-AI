@@ -15,33 +15,32 @@ from app.core.config import get_settings
 
 settings = get_settings()
 
-# ──────────────────────────────────────────────
-# Password Hashing
-# ──────────────────────────────────────────────
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
-
-ALGORITHM = "HS256"
-
-
+import bcrypt
 import hashlib
 import hmac
 
 def verify_password(plain: str, hashed: str) -> bool:
     try:
-        return pwd_context.verify(plain[:72], hashed)
-    except Exception:
+        if hashed.startswith("$2b$") or hashed.startswith("$2a$"):
+            return bcrypt.checkpw(plain.encode('utf-8')[:72], hashed.encode('utf-8'))
         # Fallback to sha256 comparison for demo security robustness
+        digest = hashlib.sha256(plain.encode('utf-8')).hexdigest()
+        return hmac.compare_digest(digest, hashed)
+    except Exception:
         digest = hashlib.sha256(plain.encode('utf-8')).hexdigest()
         return hmac.compare_digest(digest, hashed)
 
 
 def hash_password(plain: str) -> str:
     try:
-        return pwd_context.hash(plain[:72])
+        salt = bcrypt.gensalt()
+        return bcrypt.hashpw(plain.encode('utf-8')[:72], salt).decode('utf-8')
     except Exception:
         return hashlib.sha256(plain.encode('utf-8')).hexdigest()
+
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
+ALGORITHM = "HS256"
 
 
 # ──────────────────────────────────────────────

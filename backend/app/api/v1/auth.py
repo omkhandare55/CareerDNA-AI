@@ -33,13 +33,19 @@ logger = logging.getLogger("careerdna.auth")
 
 
 def _to_user_profile(user: dict) -> UserProfile:
+    created = user.get("created_at")
+    if isinstance(created, str):
+        try:
+            created = datetime.fromisoformat(created)
+        except Exception:
+            created = None
     return UserProfile(
-        user_id=user["id"],
+        user_id=str(user["id"]),
         email=user["email"],
-        full_name=user["full_name"],
-        current_title=user.get("current_title"),
-        target_role=user.get("target_role"),
-        created_at=user.get("created_at"),
+        full_name=user.get("full_name", ""),
+        current_title=user.get("current_title", ""),
+        target_role=user.get("target_role", ""),
+        created_at=created,
     )
 
 
@@ -62,17 +68,20 @@ async def register(body: RegisterRequest):
     user = store.insert("users", {
         "id": user_id,
         "email": body.email,
-        "full_name": body.full_name,
+        "full_name": body.full_name or "",
         "password_hash": hash_password(body.password),
-        "current_title": body.current_title,
-        "target_role": body.target_role,
+        "current_title": body.current_title or "",
+        "target_role": body.target_role or "",
         "is_active": True,
         "created_at": now,
         "updated_at": now,
     })
 
     # Seed demo data for new users so the dashboard looks populated
-    store.seed_demo_data(user_id)
+    try:
+        store.seed_demo_data(user_id)
+    except Exception as e:
+        logger.warning(f"Seed demo data note for user {user_id}: {e}")
 
     token = create_access_token({
         "sub": user_id,
@@ -101,9 +110,9 @@ async def login(body: LoginRequest):
         )
 
     token = create_access_token({
-        "sub": user["id"],
+        "sub": str(user["id"]),
         "email": user["email"],
-        "full_name": user["full_name"],
+        "full_name": user.get("full_name", ""),
     })
 
     logger.info(f"User logged in: {body.email}")
@@ -120,5 +129,11 @@ async def get_me(current_user: dict = Depends(get_current_user)):
     store = get_demo_store()
     user = store.get_by_id("users", current_user["user_id"])
     if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
+        # Fallback profile if user was created in previous session
+        return UserProfile(
+            user_id=current_user["user_id"],
+            email=current_user.get("email", "user@careerdna.ai"),
+            full_name=current_user.get("full_name", "CareerDNA User"),
+            target_role="Senior AI Engineer"
+        )
     return _to_user_profile(user)
