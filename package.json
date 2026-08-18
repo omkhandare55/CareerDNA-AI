@@ -2,14 +2,14 @@
   "name": "careerdna-ai",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "frontend"
+  ],
   "scripts": {
-    "dev": "cd frontend && npm run dev",
-    "build": "cd frontend && npm run build",
-    "start": "cd frontend && npm start"
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix frontend start"
   },
   "dependencies": {
-    "next": "16.3.0",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "next": "16.3.0"
   }
 }
