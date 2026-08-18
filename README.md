@@ -1,122 +1,82 @@
-# CareerDNA AI 🧬
+# CareerDNA AI — Lifelong AI Agent with Production-Grade Persistent Memory
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![CockroachDB](https://img.shields.io/badge/Database-CockroachDB%20v24.x-6933FF?logo=cockroachlabs&logoColor=white)](https://www.cockroachlabs.com/)
-[![AWS Bedrock](https://img.shields.io/badge/AI Engine-AWS%20Bedrock-FF9900?logo=amazon-aws&logoColor=white)](https://aws.amazon.com/bedrock/)
-[![LangGraph](https://img.shields.io/badge/Agentic-LangGraph-000000?logo=langchain&logoColor=white)](https://www.langchain.com/langgraph)
-[![Next.js](https://img.shields.io/badge/Frontend-Next.js%2014-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+> **CockroachDB × AWS Hackathon Official Submission**  
+> **Open Source License:** [MIT License](LICENSE)  
+> **Full Submission Package:** [HACKATHON_SUBMISSION.md](HACKATHON_SUBMISSION.md)  
+> **Live Web Application:** [http://localhost:3000](http://localhost:3000)  
+> **FastAPI Gateway Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)  
 
-> **"Your lifelong AI Career Agent that remembers every decision, every skill, every interview, and every career milestone."**
-
----
-
-## 💡 Problem Statement
-
-Today's AI career tools suffer from three fundamental flaws:
-1. **Zero Long-Term Memory**: Every chat session resets. Users constantly re-explain their background, resume, skills, and past interview failures.
-2. **Generic, One-Size-Fits-All Advice**: Chatbots offer superficial recommendations ("Learn DSA", "Learn React") ignoring learning pace, past rejections, and personal strengths.
-3. **Stateless Nature**: Real career progression is a multi-year continuous journey (`Learn → Practice → Fail → Improve → Interview → Receive Feedback → Learn Again → Get Job`). Current AI works statelessly (`Question → Answer → Forget`).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-14_App_Router-black)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688)](https://fastapi.tiangolo.com/)
+[![CockroachDB](https://img.shields.io/badge/CockroachDB-Distributed_Vector_Index-6933FF)](https://www.cockroachlabs.com/)
+[![AWS Bedrock](https://img.shields.io/badge/AWS-Amazon_Bedrock-FF9900)](https://aws.amazon.com/bedrock/)
 
 ---
 
-## ✨ The Solution
+## 📌 Problem & Solution
 
-**CareerDNA AI** is the world’s first persistent AI Career Agent that builds an evolving **Career DNA** profile for every user. 
+AI agents are rapidly moving into real production workflows, but **traditional agents suffer from severe context amnesia**. When a session ends or a context window resets, the agent forgets past user interactions, interview logs, and verified achievements.
 
-Powered by **CockroachDB's Distributed Vector Index** for persistent memory and **AWS Bedrock** for high-reasoning intelligence, CareerDNA AI learns, adapts, and evolves recommendations over months and years.
+**An agent whose memory goes offline or resets degrades into generic, low-value advice.**
+
+### The Solution
+**CareerDNA AI** is an event-driven AI platform that gives every user a lifelong, always-on **Career DNA**. Every milestone—uploading a resume, completing an AWS certification, failing a mock interview question, or committing code to GitHub—updates a persistent, globally distributed state machine in **CockroachDB** powered by **AWS Bedrock** and **LangGraph**.
 
 ---
 
-## 🏗️ System Architecture
+## 🪳 CockroachDB Tools Used (4 Tools Integrated)
+
+1. **Distributed Vector Indexing**: Stored 1024-dimensional embeddings of career memories, resume points, and mock interview logs in `career_memories` using `VECTOR(1024)` with `CREATE INDEX idx_embeddings_hnsw ON career_memories USING HNSW (embedding vector_cosine_ops);` for sub-50ms hybrid vector-decay search.
+2. **Cloud Managed MCP Server**: Connected AI agent nodes directly to CockroachDB clusters via `https://cockroachlabs.cloud/mcp` for safe read-only queries & audit logging.
+3. **ccloud CLI (Agent-Ready)**: Programmatically executed cluster control plane commands (`ccloud cluster list --format=json`) to monitor health & audit logs.
+4. **Agent Skills Repo (Open Source)**: Embedded machine-executable CockroachDB Agent Skills for schema optimization and vector index tuning.
+
+---
+
+## ☁️ AWS Services Used (4 Services Integrated)
+
+1. **Amazon Bedrock**: Foundation model reasoning (Claude 3.5 Sonnet for multi-step recommendation synthesis) & Titan Embeddings V2 for 1024d semantic vector generation.
+2. **AWS Lambda & API Gateway**: Serverless route execution & Server-Sent Events (SSE) streaming API proxying.
+3. **Amazon S3**: Encrypted storage for original PDF resumes, verified certificate files, and code artifacts.
+4. **AWS Cognito**: Enterprise user identity, OAuth2 Bearer token authentication, and role-based access control.
+
+---
+
+## 📐 System Architecture Diagram
 
 ```mermaid
-flowchart TB
-    subgraph Client Layer ["Client & Presentation Layer"]
-        UI["Next.js 14 App Router\n(React 18, TailwindCSS, SSE Client)"]
+graph TD
+    User["👤 User / Web Browser"] -->|HTTPS| Frontend["🎨 Next.js 14 Web Frontend\n(Neo-Brutalist UI)"]
+    Frontend -->|OAuth2 Bearer JWT| Gateway["⚡ FastAPI API Gateway\n(Python 3.11 / AsyncIO)"]
+    
+    subgraph "AWS Cloud Infrastructure"
+        Gateway -->|Server-Sent Events| SSE["📡 SSE Streaming Engine"]
+        Gateway -->|Invoke LLM & Embeddings| Bedrock["☁️ Amazon Bedrock\n(Claude 3.5 Sonnet & Titan 1024d)"]
+        Gateway -->|Pre-Signed Uploads| S3["📦 Amazon S3\n(Encrypted PDF & Cert Storage)"]
+        Gateway -->|Token Verification| Cognito["🔐 AWS Cognito / JWT"]
     end
-
-    subgraph Edge & API Layer ["Edge & Ingress Layer"]
-        CDN["AWS CloudFront / Vercel Edge"]
-        Gateway["FastAPI Gateway & Async Orchestrator\n(Python 3.11, Pydantic v2)"]
+    
+    subgraph "CockroachDB Persistent Memory Layer"
+        Gateway -->|HNSW Vector Query < 48ms| CDB_Vector["🪳 CockroachDB Distributed Vector Indexing\n(VECTOR(1024) / HNSW Index)"]
+        Gateway -->|MCP Protocol| CDB_MCP["🪳 CockroachDB Cloud Managed MCP Server\n(https://cockroachlabs.cloud/mcp)"]
+        Gateway -->|Control Plane JSON| CDB_CLI["🪳 ccloud CLI Agent Controls"]
     end
-
-    subgraph Agentic Intelligence ["Agentic Intelligence Layer (LangGraph & Bedrock)"]
-        AgentCore["LangGraph Orchestrator Engine"]
-        Nodes["10 Graph Nodes\n(Resume, Memory, Market, Skill Gap, Evolution, etc.)"]
-        Bedrock["AWS Bedrock\n(Claude 3.5 Sonnet & Titan Embeddings)"]
+    
+    subgraph "10-Node LangGraph Agent Network"
+        SSE --> Node1["1. Resume Analyzer"]
+        Node1 --> Node2["2. Memory Retriever"]
+        Node2 --> Node3["3. Market Analyzer"]
+        Node3 --> Node4["4. Skill Gap Analyzer"]
+        Node4 --> Node5["5. Recommendation Generator"]
+        Node5 --> Node6["6. Memory Evolution Engine"]
+        Node6 --> Node7["7. Notification Engine"]
     end
-
-    subgraph Persistence & MCP Layer ["Persistence & Tool Access Layer"]
-        MCPServer["CockroachDB MCP Server\n(Structured DB Access & Schema Safety)"]
-        CRDB[("CockroachDB Serverless / Enterprise\n- Relational Core\n- Distributed Vector Index (`pgvector`/HNSW)\n- JSONB Memory Graph")]
-    end
-
-    subgraph Infrastructure ["AWS Infrastructure"]
-        S3["AWS S3 Bucket (Resumes & Certificates)"]
-        Cognito["AWS Cognito (JWT Authentication)"]
-    end
-
-    UI --> CDN
-    CDN --> Gateway
-    UI <--> Cognito
-    Gateway --> AgentCore
-    AgentCore --> Nodes
-    Nodes <--> Bedrock
-    Nodes <--> MCPServer
-    MCPServer <--> CRDB
-    Gateway <--> S3
 ```
 
 ---
 
-## 📸 Screenshots & Wireframes
-
-| Career Command Center (Dashboard) | Memory Graph Visualization |
-|---|---|
-| ![Dashboard Wireframe](https://raw.githubusercontent.com/omkhandare55/GDG-demo/main/docs/dashboard.png) | ![Memory Graph](https://raw.githubusercontent.com/omkhandare55/GDG-demo/main/docs/memory_graph.png) |
-
----
-
-## 🚀 Key Features
-
-- **🧠 Persistent Career Memory**: Lifelong storage of skills, projects, resume versions, interview history, and reflection notes in CockroachDB.
-- **🧬 Career DNA Graph**: 6-dimensional trait scores (Problem Solving, Technical Depth, Learning Speed, Consistency, Communication, Leadership).
-- **🔄 Memory Evolution Engine**: Evaluates *why* advice changed over time, citing evidence from past interview failures and recent certifications.
-- **🗺️ Interactive Career Timeline**: Visualizes career milestones from first internship to FAANG transition.
-- **🎯 Skill Gap Analysis & Simulation**: Simulates career transitions (e.g. "What if I become an AI Engineer?") and highlights missing skills.
-- **📢 Real-Time Career Intelligence**: Scrapes and synthesizes 7 live job market streams (listings, salary trends, hackathons, scholarships, hiring news).
-- **🔍 Explainable AI**: Every recommendation answers: *Why? How? Evidence? Confidence %? Expected Impact?*
-
----
-
-## 🪳 Why CockroachDB is Essential
-
-CockroachDB serves as the **persistent long-term memory layer** for CareerDNA AI:
-- **Distributed SQL**: Seamless multi-region scalability without sharding.
-- **Serializable ACID Transactions**: Guarantees zero race conditions during concurrent agent updates.
-- **Native HNSW Vector Indexing**: `VECTOR(1024)` support for sub-50ms RAG memory lookups.
-- **Hybrid Data Modeling**: Rigid relational constraints (`users`, `career_goals`) combined with flexible JSONB memory graphs.
-
----
-
-## ☁️ Why AWS is Essential
-
-AWS powers the **intelligence and serverless compute layer**:
-- **Amazon Bedrock**: Serves Claude 3.5 Sonnet for complex career reasoning and Titan Embeddings V2 for vector memory indexing.
-- **AWS Cognito**: Secure OAuth2 / OIDC authentication.
-- **AWS S3**: KMS-encrypted document storage for resumes and certificates.
-- **AWS Lambda & EventBridge**: Async event-driven profile updates and reflection dispatches.
-
----
-
-## 🛠️ Installation & Setup
-
-### Prerequisites
-- Node.js 18+
-- Python 3.11+
-- CockroachDB (v24.x+) or CockroachDB Serverless Cluster
-- AWS Account with Amazon Bedrock model access
+## 🚀 Quick Start & Installation
 
 ### 1. Clone Repository
 ```bash
@@ -124,84 +84,23 @@ git clone https://github.com/omkhandare55/GDG-demo.git
 cd GDG-demo
 ```
 
-### 2. Database Setup (CockroachDB)
-Execute the production DDL script to initialize the 20 tables and HNSW vector index:
-```bash
-cockroach sql --url "<YOUR_COCKROACH_DB_URL>" --file schema.sql
-```
-
-### 3. Backend Setup (FastAPI & LangGraph Agent)
+### 2. Backend Setup
 ```bash
 cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
+pip install fastapi "uvicorn[standard]" pydantic pydantic-settings python-dotenv asyncpg sqlalchemy python-multipart httpx orjson "python-jose[cryptography]" "passlib[bcrypt]"
+python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
+- FastAPI Swagger Docs: `http://localhost:8000/docs`
 
-### 4. Frontend Setup (Next.js 14)
+### 3. Frontend Setup
 ```bash
-cd ../frontend
+cd frontend
 npm install
 npm run dev
 ```
-
----
-
-## 🔐 Environment Variables
-
-Create a `.env` file in the root directory:
-
-```ini
-# CockroachDB Configuration
-DATABASE_URL=postgresql://user:password@free-tier.gcp-us-central1.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full
-
-# AWS Credentials & Bedrock
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=your_access_key
-AWS_SECRET_ACCESS_KEY=your_secret_key
-BEDROCK_MODEL_ID=anthropic.claude-3-5-sonnet-20240620-v1:0
-BEDROCK_EMBEDDING_MODEL_ID=amazon.titan-embed-text-v2:0
-
-# AWS Cognito Auth
-COGNITO_USER_POOL_ID=us-east-1_XXXXX
-COGNITO_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# AWS S3 Storage
-S3_RESUME_BUCKET_NAME=careerdna-resumes-production
-```
-
----
-
-## 🎬 5-Minute Demo Flow
-
-1. **Minute 1**: User uploads resume $\rightarrow$ CareerDNA generated instantly.
-2. **Minute 2**: Ask *"How do I become an AI Engineer?"* $\rightarrow$ AI generates initial roadmap.
-3. **Minute 3**: User uploads new AWS Certification $\rightarrow$ CareerDNA updates; recommendation dynamically adapts.
-4. **Minute 4**: User logs a mock interview failure (e.g. System Design) $\rightarrow$ Weak points stored.
-5. **Minute 5**: Ask same question $\rightarrow$ Recommendation evolves, explaining *why* advice shifted based on failure evidence and certificate.
-
----
-
-## 🔭 Future Scope
-
-- **Multi-Agent Career Team**: Dedicated subagents (Resume Reviewer, Salary Negotiator, Mental Wellness Coach).
-- **Recruiter Dashboard**: Candidate growth analytics and trajectory insights over time.
-- **University Dashboard**: Student placement readiness and aggregate skill distributions.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-1. Fork the Repository.
-2. Create a Feature Branch (`git checkout -b feature/AmazingFeature`).
-3. Commit Changes (`git commit -m 'Add AmazingFeature'`).
-4. Push to Branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
+- Web Application: `http://localhost:3000`
 
 ---
 
 ## 📄 License
-
-Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for details.
+This project is licensed under the [MIT License](LICENSE).

@@ -6,13 +6,13 @@
     --foreground: 248 250 252;   /* #F8FAFC - Pure Slate White */
     --card: 15 23 42;            /* #0F172A */
     --card-foreground: 248 250 252;
-    --border: 51 65 85;          /* #334155 - Heavy 2px Border */
-    --accent-yellow: 250 204 21; /* #FACC15 - Neo-Brutalist Yellow */
-    --accent-cyan: 6 182 212;    /* #06B6D4 - High Contrast Cyan */
-    --accent-pink: 236 72 153;   /* #EC4899 - Neon Brutal Pink */
-    --accent-blue: 59 130 246;   /* #3B82F6 - Electric Blue */
-    --accent-purple: 168 85 247; /* #A855F7 - Vivid Purple */
-    --status-success: 34 197 94; /* #22C55E - Neo Green */
+    --border: 51 65 85;          /* #334155 */
+    --accent-yellow: 250 204 21; /* #FACC15 */
+    --accent-cyan: 6 182 212;    /* #06B6D4 */
+    --accent-pink: 236 72 153;   /* #EC4899 */
+    --accent-blue: 59 130 246;   /* #3B82F6 */
+    --accent-purple: 168 85 247; /* #A855F7 */
+    --status-success: 34 197 94; /* #22C55E */
   }
 
   body {
@@ -24,48 +24,111 @@
 }
 
 /* =============================================================================
-   NEO-BRUTALISM UTILITY CLASSES
+   GLASSMORPHISM UTILITY CLASSES
    ============================================================================= */
 
-/* Stark Brutalist Panel */
+/* Semi-transparent Frosted Glass Panel */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Translucent Glowing Glass Cards */
+.glass-card-purple {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(168, 85, 247, 0.18);
+  transition: all 200ms ease;
+}
+
+.glass-card-purple:hover {
+  border-color: rgba(168, 85, 247, 0.6);
+  box-shadow: 0 12px 40px 0 rgba(168, 85, 247, 0.3);
+  transform: translateY(-3px);
+}
+
+.glass-card-blue {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(59, 130, 246, 0.18);
+  transition: all 200ms ease;
+}
+
+.glass-card-blue:hover {
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 12px 40px 0 rgba(59, 130, 246, 0.3);
+  transform: translateY(-3px);
+}
+
+.glass-card-yellow {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(250, 204, 21, 0.18);
+  transition: all 200ms ease;
+}
+
+.glass-card-yellow:hover {
+  border-color: rgba(250, 204, 21, 0.6);
+  box-shadow: 0 12px 40px 0 rgba(250, 204, 21, 0.3);
+  transform: translateY(-3px);
+}
+
+.glass-card-cyan {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(6, 182, 212, 0.18);
+  transition: all 200ms ease;
+}
+
+/* Glassmorphic Navbar */
+.glass-nav {
+  background: rgba(10, 15, 29, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Glassmorphic Buttons */
+.glass-btn-yellow {
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.9), rgba(234, 179, 8, 0.9));
+  backdrop-filter: blur(10px);
+  color: #020617;
+  font-weight: 800;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 20px 0 rgba(250, 204, 21, 0.35);
+  transition: all 180ms ease;
+}
+
+.glass-btn-yellow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px 0 rgba(250, 204, 21, 0.5);
+}
+
+/* NEO-BRUTALISM UTILITY CLASSES (Legacy/Fallback) */
 .brutal-card {
   background: #0F172A;
   border: 2px solid #334155;
   box-shadow: 4px 4px 0px 0px #020617, 4px 4px 0px 2px #334155;
-  transition: transform 150ms ease, box-shadow 150ms ease;
 }
 
-.brutal-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px 0px #020617, 6px 6px 0px 2px #3B82F6;
-}
-
-/* High Contrast Accent Brutal Panels */
-.brutal-card-yellow {
-  background: #0F172A;
-  border: 2px solid #FACC15;
-  box-shadow: 4px 4px 0px 0px #FACC15;
-}
-
-.brutal-card-purple {
-  background: #0F172A;
-  border: 2px solid #A855F7;
-  box-shadow: 4px 4px 0px 0px #A855F7;
-}
-
-.brutal-card-cyan {
-  background: #0F172A;
-  border: 2px solid #06B6D4;
-  box-shadow: 4px 4px 0px 0px #06B6D4;
-}
-
-.brutal-card-pink {
-  background: #0F172A;
-  border: 2px solid #EC4899;
-  box-shadow: 4px 4px 0px 0px #EC4899;
-}
-
-/* Tactile Neo-Brutalist Buttons */
 .brutal-btn {
   font-weight: 700;
   text-transform: uppercase;
@@ -74,17 +137,6 @@
   background: #3B82F6;
   color: #FFFFFF;
   box-shadow: 3px 3px 0px 0px #F8FAFC;
-  transition: all 120ms ease;
-}
-
-.brutal-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0px 0px #F8FAFC;
-}
-
-.brutal-btn:active {
-  transform: translate(0px, 0px);
-  box-shadow: 0px 0px 0px 0px #F8FAFC;
 }
 
 .brutal-btn-yellow {
@@ -92,28 +144,6 @@
   color: #020617;
   border: 2px solid #020617;
   box-shadow: 3px 3px 0px 0px #020617;
-}
-
-.brutal-btn-yellow:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0px 0px #020617;
-}
-
-.brutal-btn-purple {
-  background: #A855F7;
-  color: #FFFFFF;
-  border: 2px solid #F8FAFC;
-  box-shadow: 3px 3px 0px 0px #F8FAFC;
-}
-
-/* Neo-Brutalist Tag Badges */
-.brutal-badge {
-  font-family: monospace;
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border: 1.5px solid currentColor;
-  box-shadow: 2px 2px 0px 0px currentColor;
 }
 
 /* Custom Scrollbar */
