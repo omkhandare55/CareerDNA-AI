@@ -10,7 +10,7 @@
     },
     {
       "test": "POST /api/v1/auth/register",
-      "detail": "User registered (ID: d48c2ccf-dbc4-4ac7-8a27-f4db9a2da06a) with Bearer token"
+      "detail": "User registered (ID: 9c5b733c-8d3f-485c-a39c-234bea72c9cb) with Bearer token"
     },
     {
       "test": "POST /api/v1/auth/login",
@@ -18,7 +18,7 @@
     },
     {
       "test": "GET /api/v1/auth/me",
-      "detail": "Authenticated as test_auditor_1787043122@careerdna.ai (Lead AI Engineer)"
+      "detail": "Authenticated as test_auditor_1787044110@careerdna.ai (Lead AI Engineer)"
     },
     {
       "test": "GET /api/v1/dna",
@@ -30,10 +30,10 @@
     },
     {
       "test": "POST /api/v1/skills",
-      "detail": "Created skill de65acd9-cc86-4759-98a9-4e048c179928"
+      "detail": "Created skill c0fdd70d-f9e3-42c5-be22-7999fcdd7daf"
     },
     {
-      "test": "DELETE /api/v1/skills/de65acd9-cc86-4759-98a9-4e048c179928",
+      "test": "DELETE /api/v1/skills/c0fdd70d-f9e3-42c5-be22-7999fcdd7daf",
       "detail": "Skill deleted successfully"
     },
     {
@@ -46,7 +46,7 @@
     },
     {
       "test": "POST /api/v1/memory",
-      "detail": "Created memory node 5e6bd008-29a5-4681-8e46-d4c8924fceed"
+      "detail": "Created memory node 861f7b8f-cf78-4cb1-b7e4-720ea702794e"
     },
     {
       "test": "GET /api/v1/interviews",
@@ -58,10 +58,10 @@
     },
     {
       "test": "POST /api/v1/learning",
-      "detail": "Created learning course 25a71c7b-28c5-4e6b-b9a0-3e1b05500706"
+      "detail": "Created learning course 4f35cf91-7efa-4e39-8402-6f219752acf8"
     },
     {
-      "test": "PATCH /api/v1/learning/25a71c7b-28c5-4e6b-b9a0-3e1b05500706",
+      "test": "PATCH /api/v1/learning/4f35cf91-7efa-4e39-8402-6f219752acf8",
       "detail": "Course completed"
     },
     {
@@ -69,12 +69,12 @@
       "detail": "Total Notifications: 3"
     },
     {
-      "test": "PATCH /api/v1/notifications/33ac6f22-93c5-4442-9b49-b7a6631ce1f0/read",
+      "test": "PATCH /api/v1/notifications/4f25d79d-ae39-4b1d-99da-7298fb1e966c/read",
       "detail": "Marked notification as read"
     },
     {
       "test": "POST /api/v1/documents/presigned-url",
-      "detail": "Upload URL generated: resumes/d48c2ccf-dbc4-4ac7-8a27-f4db9a2da06a/11ae926e-bc67-44a9-9246-0b0ddaa071fb_my_resume_2026.pdf"
+      "detail": "Upload URL generated: resumes/9c5b733c-8d3f-485c-a39c-234bea72c9cb/981398db-0cdd-4def-9806-e122913d9d3c_my_resume_2026.pdf"
     },
     {
       "test": "POST /api/v1/agent/recommend (SSE)",
@@ -114,7 +114,7 @@
     },
     {
       "test": "POST /api/v1/interviews/evaluate",
-      "detail": "Mock Graded: 88/100 (EXCELLENT), Vector Node: bd63a3fe..."
+      "detail": "Mock Graded: 88/100 (EXCELLENT), Vector Node: 262a1576..."
     },
     {
       "test": "GET /api/v1/reflection/prompts",
@@ -131,6 +131,34 @@
     {
       "test": "POST /api/v1/cluster/exec-ccloud",
       "detail": "ccloud command executed in 0.0ms"
+    },
+    {
+      "test": "GET /api/v1/agents/roster",
+      "detail": "Active Agents: 6"
+    },
+    {
+      "test": "POST /api/v1/agents/collaborate",
+      "detail": "Consensus reached across 6 agents: 'Execute Sequential 2-Week Mastery Split ...'"
+    },
+    {
+      "test": "GET /api/v1/recruiter/candidates",
+      "detail": "Verified candidates: 3"
+    },
+    {
+      "test": "POST /api/v1/recruiter/verify-proof",
+      "detail": "Verified CockroachDB proof for Vijay Kumar"
+    },
+    {
+      "test": "GET /api/v1/agent-inspector/graph-state",
+      "detail": "10-Node LangGraph DAG verified, Checkpoint: chk_bedrock_0982348"
+    },
+    {
+      "test": "GET /api/v1/resume-optimizer/benchmarks",
+      "detail": "Role benchmarks retrieved"
+    },
+    {
+      "test": "POST /api/v1/resume-optimizer/optimize-bullets",
+      "detail": "ATS Score: 68 -> 94 (+26 pts)"
     },
     {
       "test": "GET /",
@@ -178,6 +206,22 @@
     },
     {
       "test": "GET /cluster-ops",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /agents",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /recruiter",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /agent-inspector",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /resume-optimizer",
       "detail": "HTTP 200 OK"
     },
     {

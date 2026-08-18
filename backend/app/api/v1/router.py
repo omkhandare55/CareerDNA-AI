@@ -11,15 +11,19 @@ from app.api.v1 import (
     documents,
     timeline,
     dna,
+    simulation,
+    mock_interview,
+    reflection,
+    cluster_ops,
     interviews,
     skills,
     memory,
     notifications,
     learning,
-    simulation,
-    mock_interview,
-    reflection,
-    cluster_ops,
+    agents_team,
+    recruiter,
+    agent_inspector,
+    resume_optimizer,
 )
 
 api_router = APIRouter(prefix="/api/v1")
@@ -33,6 +37,10 @@ api_router.include_router(simulation.router)
 api_router.include_router(mock_interview.router)
 api_router.include_router(reflection.router)
 api_router.include_router(cluster_ops.router)
+api_router.include_router(agents_team.router)
+api_router.include_router(recruiter.router)
+api_router.include_router(agent_inspector.router)
+api_router.include_router(resume_optimizer.router)
 api_router.include_router(interviews.router)
 api_router.include_router(skills.router)
 api_router.include_router(memory.router)

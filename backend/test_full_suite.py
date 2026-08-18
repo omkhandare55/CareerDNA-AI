@@ -379,8 +379,75 @@ try:
 except Exception as e:
     log_fail("Cluster Ops API", str(e))
 
-# 8. FRONTEND WEB ROUTES LIVENESS
-print("\n[PHASE 8] Testing Frontend Next.js Web Routes Liveness...")
+# 8. PHASE 3: MULTI-AGENT TEAM, RECRUITER & LANGGRAPH INSPECTOR
+print("\n[PHASE 8] Testing Phase 3 Advanced Multi-Agent & Enterprise Modules...")
+
+# 8.1 Multi-Agent Team Deliberation
+try:
+    r = client.get(f"{BASE_API}/api/v1/agents/roster")
+    assert r.status_code == 200
+    log_pass("GET /api/v1/agents/roster", f"Active Agents: {r.json().get('total')}")
+
+    r = client.post(f"{BASE_API}/api/v1/agents/collaborate", headers=headers, json={
+        "query": "Should I prioritize CockroachDB vector search or Raft consensus for FAANG L6 interview?"
+    })
+    assert r.status_code == 200
+    agent_data = r.json()
+    assert agent_data.get("agents_participated") == 6
+    log_pass("POST /api/v1/agents/collaborate", f"Consensus reached across {agent_data.get('agents_participated')} agents: '{agent_data.get('consensus_action')[:40]}...'")
+except Exception as e:
+    log_fail("Multi-Agent Team API", str(e))
+
+# 8.2 Enterprise Recruiter Intelligence
+try:
+    r = client.get(f"{BASE_API}/api/v1/recruiter/candidates")
+    assert r.status_code == 200
+    c_list = r.json().get("candidates", [])
+    log_pass("GET /api/v1/recruiter/candidates", f"Verified candidates: {len(c_list)}")
+
+    if c_list:
+        cand = c_list[0]
+        r_proof = client.post(f"{BASE_API}/api/v1/recruiter/verify-proof", headers=headers, json={
+            "candidate_id": cand["candidate_id"],
+            "proof_hash": cand["cockroachdb_proof_hash"]
+        })
+        assert r_proof.status_code == 200 and r_proof.json().get("verified") is True
+        log_pass("POST /api/v1/recruiter/verify-proof", f"Verified CockroachDB proof for {cand['full_name']}")
+except Exception as e:
+    log_fail("Recruiter Intelligence API", str(e))
+
+# 8.3 LangGraph Agent DAG Inspector
+try:
+    r = client.get(f"{BASE_API}/api/v1/agent-inspector/graph-state")
+    assert r.status_code == 200
+    dag_data = r.json()
+    assert dag_data.get("total_nodes") == 10
+    log_pass("GET /api/v1/agent-inspector/graph-state", f"10-Node LangGraph DAG verified, Checkpoint: {dag_data.get('active_checkpoint_id')}")
+except Exception as e:
+    log_fail("LangGraph DAG Inspector", str(e))
+
+# 8.4 Resume ATS Bullet-Point Optimizer
+try:
+    r = client.get(f"{BASE_API}/api/v1/resume-optimizer/benchmarks")
+    assert r.status_code == 200
+    log_pass("GET /api/v1/resume-optimizer/benchmarks", "Role benchmarks retrieved")
+
+    r = client.post(f"{BASE_API}/api/v1/resume-optimizer/optimize-bullets", headers=headers, json={
+        "original_bullets": [
+            "Worked on backend database and added vector search for users.",
+            "Built microservices with FastAPI and improved performance."
+        ],
+        "target_role": "Staff AI Systems Engineer"
+    })
+    assert r.status_code == 200
+    res_data = r.json()
+    assert res_data.get("score_delta") > 15
+    log_pass("POST /api/v1/resume-optimizer/optimize-bullets", f"ATS Score: {res_data.get('original_ats_score')} -> {res_data.get('optimized_ats_score')} (+{res_data.get('score_delta')} pts)")
+except Exception as e:
+    log_fail("Resume Optimizer API", str(e))
+
+# 9. FRONTEND WEB ROUTES LIVENESS
+print("\n[PHASE 9] Testing Frontend Next.js Web Routes Liveness (22 Routes)...")
 frontend_routes = [
     "/",
     "/login",
@@ -394,6 +461,10 @@ frontend_routes = [
     "/mock-interview",
     "/reflection",
     "/cluster-ops",
+    "/agents",
+    "/recruiter",
+    "/agent-inspector",
+    "/resume-optimizer",
     "/applications",
     "/resume",
     "/interview-analytics",

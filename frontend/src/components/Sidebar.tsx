@@ -21,7 +21,11 @@ import {
   Compass,
   Mic,
   BookOpen,
-  Server
+  Server,
+  Bot,
+  Building,
+  Activity,
+  FileCheck
 } from "lucide-react";
 import { apiGet } from "@/lib/api";
 
@@ -30,9 +34,13 @@ const NAV_ITEMS = [
   { name: "Career DNA", path: "/career-dna", icon: Dna },
   { name: "Memory Timeline", path: "/timeline", icon: History },
   { name: "Memory Graph", path: "/memory-graph", icon: Network },
+  { name: "Multi-Agent Team", path: "/agents", icon: Bot },
   { name: "Recommendations", path: "/recommendations", icon: Sparkles },
   { name: "Career Simulation", path: "/simulation", icon: Compass },
   { name: "AI Mock Practice", path: "/mock-interview", icon: Mic },
+  { name: "LangGraph Inspector", path: "/agent-inspector", icon: Activity },
+  { name: "Resume Optimizer", path: "/resume-optimizer", icon: FileCheck },
+  { name: "Recruiter Portal", path: "/recruiter", icon: Building },
   { name: "Weekly Reflection", path: "/reflection", icon: BookOpen },
   { name: "Cluster Operations", path: "/cluster-ops", icon: Server },
   { name: "Applications", path: "/applications", icon: Briefcase },
