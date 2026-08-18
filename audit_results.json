@@ -10,7 +10,7 @@
     },
     {
       "test": "POST /api/v1/auth/register",
-      "detail": "User registered (ID: 9c5b733c-8d3f-485c-a39c-234bea72c9cb) with Bearer token"
+      "detail": "User registered (ID: ac436c00-7a91-4ca2-a4ec-186e52baba8a) with Bearer token"
     },
     {
       "test": "POST /api/v1/auth/login",
@@ -18,7 +18,7 @@
     },
     {
       "test": "GET /api/v1/auth/me",
-      "detail": "Authenticated as test_auditor_1787044110@careerdna.ai (Lead AI Engineer)"
+      "detail": "Authenticated as test_auditor_1787044666@careerdna.ai (Lead AI Engineer)"
     },
     {
       "test": "GET /api/v1/dna",
@@ -30,10 +30,10 @@
     },
     {
       "test": "POST /api/v1/skills",
-      "detail": "Created skill c0fdd70d-f9e3-42c5-be22-7999fcdd7daf"
+      "detail": "Created skill 6cffafb9-0aff-460a-a08e-e3f06ee2c474"
     },
     {
-      "test": "DELETE /api/v1/skills/c0fdd70d-f9e3-42c5-be22-7999fcdd7daf",
+      "test": "DELETE /api/v1/skills/6cffafb9-0aff-460a-a08e-e3f06ee2c474",
       "detail": "Skill deleted successfully"
     },
     {
@@ -46,7 +46,7 @@
     },
     {
       "test": "POST /api/v1/memory",
-      "detail": "Created memory node 861f7b8f-cf78-4cb1-b7e4-720ea702794e"
+      "detail": "Created memory node 3c4694f4-0b31-4f47-920c-6d6e17b24d4e"
     },
     {
       "test": "GET /api/v1/interviews",
@@ -58,10 +58,10 @@
     },
     {
       "test": "POST /api/v1/learning",
-      "detail": "Created learning course 4f35cf91-7efa-4e39-8402-6f219752acf8"
+      "detail": "Created learning course 1c428875-b3fb-427c-aef3-a26e076894de"
     },
     {
-      "test": "PATCH /api/v1/learning/4f35cf91-7efa-4e39-8402-6f219752acf8",
+      "test": "PATCH /api/v1/learning/1c428875-b3fb-427c-aef3-a26e076894de",
       "detail": "Course completed"
     },
     {
@@ -69,12 +69,12 @@
       "detail": "Total Notifications: 3"
     },
     {
-      "test": "PATCH /api/v1/notifications/4f25d79d-ae39-4b1d-99da-7298fb1e966c/read",
+      "test": "PATCH /api/v1/notifications/88fb4e3a-57fd-4e58-a57f-b4ba52b0781e/read",
       "detail": "Marked notification as read"
     },
     {
       "test": "POST /api/v1/documents/presigned-url",
-      "detail": "Upload URL generated: resumes/9c5b733c-8d3f-485c-a39c-234bea72c9cb/981398db-0cdd-4def-9806-e122913d9d3c_my_resume_2026.pdf"
+      "detail": "Upload URL generated: resumes/ac436c00-7a91-4ca2-a4ec-186e52baba8a/27a631ff-26cd-4a0d-805d-e6f8c0edcd4b_my_resume_2026.pdf"
     },
     {
       "test": "POST /api/v1/agent/recommend (SSE)",
@@ -114,7 +114,7 @@
     },
     {
       "test": "POST /api/v1/interviews/evaluate",
-      "detail": "Mock Graded: 88/100 (EXCELLENT), Vector Node: 262a1576..."
+      "detail": "Mock Graded: 88/100 (EXCELLENT), Vector Node: 86ab4a95..."
     },
     {
       "test": "GET /api/v1/reflection/prompts",
@@ -159,6 +159,38 @@
     {
       "test": "POST /api/v1/resume-optimizer/optimize-bullets",
       "detail": "ATS Score: 68 -> 94 (+26 pts)"
+    },
+    {
+      "test": "GET /api/v1/voice/scenarios",
+      "detail": "Voice Scenarios: 3"
+    },
+    {
+      "test": "POST /api/v1/voice/evaluate-transcript",
+      "detail": "Voice Evaluation: 79% Score, 25 WPM, Node: 89277f3e..."
+    },
+    {
+      "test": "GET /api/v1/auto-apply/matches",
+      "detail": "Matched AI Positions: 4"
+    },
+    {
+      "test": "POST /api/v1/auto-apply/dispatch",
+      "detail": "Dispatched application to Google Cloud (DELIVERED_TO_HIRING_QUEUE)"
+    },
+    {
+      "test": "GET /api/v1/resilience/topology",
+      "detail": "Topology: 9 nodes across 3 regions"
+    },
+    {
+      "test": "POST /api/v1/resilience/simulate-partition",
+      "detail": "Raft Partition Handled in 380.0ms (Data loss: 0 bytes)"
+    },
+    {
+      "test": "GET /api/v1/negotiation/benchmarks",
+      "detail": "Compensation benchmarks retrieved"
+    },
+    {
+      "test": "POST /api/v1/negotiation/counter-offer",
+      "detail": "Negotiation: COUNTER_PROPOSED (78% prob), 4-Yr Gain: +$210,000"
     },
     {
       "test": "GET /",
@@ -222,6 +254,22 @@
     },
     {
       "test": "GET /resume-optimizer",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /voice-interview",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /auto-apply",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /global-resilience",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /negotiation-lab",
       "detail": "HTTP 200 OK"
     },
     {

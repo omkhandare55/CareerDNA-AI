@@ -25,7 +25,11 @@ import {
   Bot,
   Building,
   Activity,
-  FileCheck
+  FileCheck,
+  Radio,
+  Send,
+  Globe,
+  DollarSign
 } from "lucide-react";
 import { apiGet } from "@/lib/api";
 
@@ -35,6 +39,10 @@ const NAV_ITEMS = [
   { name: "Memory Timeline", path: "/timeline", icon: History },
   { name: "Memory Graph", path: "/memory-graph", icon: Network },
   { name: "Multi-Agent Team", path: "/agents", icon: Bot },
+  { name: "Voice AI Studio", path: "/voice-interview", icon: Radio },
+  { name: "Auto-Apply Hub", path: "/auto-apply", icon: Send },
+  { name: "Negotiation Lab", path: "/negotiation-lab", icon: DollarSign },
+  { name: "Global Resilience", path: "/global-resilience", icon: Globe },
   { name: "Recommendations", path: "/recommendations", icon: Sparkles },
   { name: "Career Simulation", path: "/simulation", icon: Compass },
   { name: "AI Mock Practice", path: "/mock-interview", icon: Mic },

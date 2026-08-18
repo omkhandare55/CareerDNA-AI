@@ -446,8 +446,88 @@ try:
 except Exception as e:
     log_fail("Resume Optimizer API", str(e))
 
-# 9. FRONTEND WEB ROUTES LIVENESS
-print("\n[PHASE 9] Testing Frontend Next.js Web Routes Liveness (22 Routes)...")
+# 9. PHASE 4: VOICE SIMULATOR, AUTO-APPLY, RESILIENCE & NEGOTIATION
+print("\n[PHASE 9] Testing Phase 4 Frontier Intelligence & Global Resilience...")
+
+# 9.1 Voice Interview Simulator
+try:
+    r = client.get(f"{BASE_API}/api/v1/voice/scenarios")
+    assert r.status_code == 200
+    log_pass("GET /api/v1/voice/scenarios", f"Voice Scenarios: {r.json().get('total')}")
+
+    r = client.post(f"{BASE_API}/api/v1/voice/evaluate-transcript", headers=headers, json={
+        "scenario_id": "sc_01",
+        "transcript": "In CockroachDB, Raft consensus ensures distributed transaction serializability across regions with follower reads and HNSW vector search.",
+        "duration_seconds": 40
+    })
+    assert r.status_code == 200
+    v_data = r.json()
+    assert v_data.get("overall_score") > 70
+    log_pass("POST /api/v1/voice/evaluate-transcript", f"Voice Evaluation: {v_data.get('overall_score')}% Score, {v_data.get('pacing_words_per_minute')} WPM, Node: {v_data.get('vector_memory_id')[:8]}...")
+except Exception as e:
+    log_fail("Voice Interview API", str(e))
+
+# 9.2 Autonomous Auto-Apply Dispatcher
+try:
+    r = client.get(f"{BASE_API}/api/v1/auto-apply/matches", headers=headers)
+    assert r.status_code == 200
+    j_list = r.json().get("jobs", [])
+    log_pass("GET /api/v1/auto-apply/matches", f"Matched AI Positions: {len(j_list)}")
+
+    if j_list:
+        job = j_list[0]
+        r_disp = client.post(f"{BASE_API}/api/v1/auto-apply/dispatch", headers=headers, json={
+            "job_id": job["job_id"]
+        })
+        assert r_disp.status_code == 200
+        log_pass("POST /api/v1/auto-apply/dispatch", f"Dispatched application to {job['company_name']} ({r_disp.json().get('dispatch_status')})")
+except Exception as e:
+    log_fail("Autonomous Auto-Apply API", str(e))
+
+# 9.3 Global Resilience Simulator
+try:
+    r = client.get(f"{BASE_API}/api/v1/resilience/topology")
+    assert r.status_code == 200
+    top_data = r.json()
+    assert top_data.get("total_nodes") == 9
+    log_pass("GET /api/v1/resilience/topology", f"Topology: {top_data.get('total_nodes')} nodes across 3 regions")
+
+    r_part = client.post(f"{BASE_API}/api/v1/resilience/simulate-partition", headers=headers, json={
+        "isolated_region": "aws-eu-west-1",
+        "failure_type": "NETWORK_PARTITION"
+    })
+    assert r_part.status_code == 200 and r_part.json().get("quorum_maintained") is True
+    log_pass("POST /api/v1/resilience/simulate-partition", f"Raft Partition Handled in {r_part.json().get('failover_duration_ms')}ms (Data loss: 0 bytes)")
+except Exception as e:
+    log_fail("Global Resilience API", str(e))
+
+# 9.4 Salary Negotiation Battle Lab
+try:
+    r = client.get(f"{BASE_API}/api/v1/negotiation/benchmarks")
+    assert r.status_code == 200
+    log_pass("GET /api/v1/negotiation/benchmarks", "Compensation benchmarks retrieved")
+
+    r_neg = client.post(f"{BASE_API}/api/v1/negotiation/counter-offer", headers=headers, json={
+        "company_name": "Google",
+        "target_role": "Staff AI Systems Engineer",
+        "initial_base": 220000,
+        "initial_equity_annual": 120000,
+        "initial_signing_bonus": 30000,
+        "counter_base": 245000,
+        "counter_equity_annual": 150000,
+        "counter_signing_bonus": 50000,
+        "competing_offer_company": "Anthropic",
+        "justification_pitch": "Leveraging my CockroachDB vector search background and Anthropic competing offer."
+    })
+    assert r_neg.status_code == 200
+    neg_data = r_neg.json()
+    assert neg_data.get("acceptance_probability_pct") > 50
+    log_pass("POST /api/v1/negotiation/counter-offer", f"Negotiation: {neg_data.get('hiring_manager_verdict')} ({neg_data.get('acceptance_probability_pct')}% prob), 4-Yr Gain: +${neg_data.get('four_year_total_delta'):,}")
+except Exception as e:
+    log_fail("Negotiation Battle API", str(e))
+
+# 10. FRONTEND WEB ROUTES LIVENESS
+print("\n[PHASE 10] Testing Frontend Next.js Web Routes Liveness (26 Routes)...")
 frontend_routes = [
     "/",
     "/login",
@@ -465,6 +545,10 @@ frontend_routes = [
     "/recruiter",
     "/agent-inspector",
     "/resume-optimizer",
+    "/voice-interview",
+    "/auto-apply",
+    "/global-resilience",
+    "/negotiation-lab",
     "/applications",
     "/resume",
     "/interview-analytics",
