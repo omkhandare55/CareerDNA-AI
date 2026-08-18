@@ -48,52 +48,52 @@ export default function LandingPage() {
       {/* ─────────────────────────────────────────────────────────────────────────────
           1. TOP NAVIGATION BAR WITH LOGIN & HOME OPTIONS
          ───────────────────────────────────────────────────────────────────────────── */}
-      <nav className="border-b-4 border-slate-800 bg-[#0A0F1D] sticky top-0 z-50 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <nav className="border-b-4 border-slate-800 bg-[#0A0F1D] sticky top-0 z-50 px-3 sm:px-6 py-3 sm:py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#FACC15] text-[#020617] border-2 border-slate-100 flex items-center justify-center font-black text-xl shadow-[3px_3px_0px_0px_#EC4899]">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#FACC15] text-[#020617] border-2 border-slate-100 flex items-center justify-center font-black text-lg sm:text-xl shadow-[2px_2px_0px_0px_#EC4899] sm:shadow-[3px_3px_0px_0px_#EC4899]">
               🧬
             </div>
             <div>
-              <span className="font-black text-xl text-slate-100 uppercase tracking-wider font-mono flex items-center gap-1.5">
-                CareerDNA <span className="text-xs px-2 py-0.5 bg-[#EC4899] text-white border border-slate-100 font-bold">AI</span>
+              <span className="font-black text-base sm:text-xl text-slate-100 uppercase tracking-wider font-mono flex items-center gap-1">
+                CareerDNA <span className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 bg-[#EC4899] text-white border border-slate-100 font-bold">AI</span>
               </span>
-              <p className="text-[10px] text-yellow-400 font-bold uppercase tracking-widest font-mono">Lifelong AI Agent Platform</p>
+              <p className="text-[8px] sm:text-[10px] text-yellow-400 font-bold uppercase tracking-widest font-mono hidden xs:block">Lifelong AI Agent</p>
             </div>
           </Link>
 
           {/* Center Links */}
-          <div className="hidden md:flex items-center gap-8 font-mono text-xs font-black uppercase tracking-wider">
+          <div className="hidden lg:flex items-center gap-8 font-mono text-xs font-black uppercase tracking-wider">
             <a href="#demo" className="hover:text-yellow-400 transition">Agent Simulator</a>
             <a href="#features" className="hover:text-cyan-400 transition">Features</a>
             <a href="#pricing" className="hover:text-purple-400 transition">Pricing</a>
           </div>
 
           {/* Navigation Action Buttons: HOME, LOGIN, REGISTER */}
-          <div className="flex items-center gap-3 font-mono">
+          <div className="flex items-center gap-1.5 sm:gap-3 font-mono">
             {/* HOME / DASHBOARD */}
             <Link
               href="/dashboard"
-              className="py-2 px-3.5 bg-[#0F172A] border-2 border-slate-700 hover:border-yellow-400 text-slate-100 text-xs font-black uppercase flex items-center gap-1.5 shadow-[2px_2px_0px_0px_#020617] transition"
+              className="py-1.5 sm:py-2 px-2 sm:px-3.5 bg-[#0F172A] border-2 border-slate-700 hover:border-yellow-400 text-slate-100 text-[10px] sm:text-xs font-black uppercase flex items-center gap-1 shadow-[2px_2px_0px_0px_#020617] transition"
             >
-              <Globe className="w-3.5 h-3.5 text-cyan-400" /> HOME
+              <Globe className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-cyan-400" /> <span className="hidden sm:inline">HOME</span>
             </Link>
 
             {/* LOGIN */}
             <Link
               href="/login"
-              className="py-2 px-3.5 bg-[#0F172A] border-2 border-slate-100 hover:border-purple-400 text-slate-100 text-xs font-black uppercase flex items-center gap-1.5 shadow-[2px_2px_0px_0px_#A855F7] transition"
+              className="py-1.5 sm:py-2 px-2 sm:px-3.5 bg-[#0F172A] border-2 border-slate-100 hover:border-purple-400 text-slate-100 text-[10px] sm:text-xs font-black uppercase flex items-center gap-1 shadow-[2px_2px_0px_0px_#A855F7] transition"
             >
-              <LogIn className="w-3.5 h-3.5 text-yellow-400" /> LOGIN
+              <LogIn className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-yellow-400" /> <span className="hidden sm:inline">LOGIN</span>
             </Link>
 
             {/* REGISTER */}
             <Link
               href="/register"
-              className="py-2 px-4 brutal-btn brutal-btn-yellow text-xs flex items-center gap-1.5 font-black uppercase"
+              className="py-1.5 sm:py-2 px-2.5 sm:px-4 brutal-btn brutal-btn-yellow text-[10px] sm:text-xs flex items-center gap-1 font-black uppercase whitespace-nowrap"
             >
-              <UserPlus className="w-3.5 h-3.5" /> GET STARTED
+              <UserPlus className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> <span>GET STARTED</span>
             </Link>
           </div>
         </div>
