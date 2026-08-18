@@ -1,0 +1,15 @@
+{
+  "name": "careerdna-ai",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm start"
+  },
+  "dependencies": {
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  }
+}
