@@ -9,7 +9,7 @@ import uuid
 from datetime import date, datetime
 from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -31,7 +31,7 @@ class PaginatedMeta(BaseModel):
 # ─────────────────────────────────────────────────────────────────────────────
 
 class RegisterRequest(BaseModel):
-    email: EmailStr
+    email: str = Field(min_length=3, max_length=255)
     password: str = Field(min_length=8)
     full_name: str = Field(min_length=2, max_length=255)
     current_title: Optional[str] = None
@@ -39,7 +39,7 @@ class RegisterRequest(BaseModel):
 
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    email: str = Field(min_length=3, max_length=255)
     password: str
 
 
