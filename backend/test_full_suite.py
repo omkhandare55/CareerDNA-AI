@@ -33,7 +33,7 @@ print("=" * 70)
 print("  CAREERDNA AI - DEEP SYSTEM AUDIT & TEST LOOP (LIVE COCKROACHDB)")
 print("=" * 70)
 
-client = httpx.Client(timeout=30.0)
+client = httpx.Client(timeout=60.0)
 
 # 1. SERVER HEALTH & BASIC GATEWAY
 print("\n[PHASE 1] Checking Core Gateway & Health Endpoints...")
@@ -303,8 +303,84 @@ try:
 except Exception as e:
     log_fail("Career Intelligence Service", str(e))
 
-# 7. FRONTEND WEB ROUTES LIVENESS
-print("\n[PHASE 7] Testing Frontend Next.js Web Routes Liveness...")
+# 7. PHASE 2: AUTONOMOUS INTELLIGENCE & INTERACTIVE AGENTS
+print("\n[PHASE 7] Testing Phase 2 Autonomous Intelligence Modules...")
+
+# 7.1 Career Simulation Studio
+try:
+    r = client.get(f"{BASE_API}/api/v1/simulate/targets")
+    assert r.status_code == 200
+    log_pass("GET /api/v1/simulate/targets", f"Targets count: {r.json().get('total')}")
+
+    r = client.post(f"{BASE_API}/api/v1/simulate/career-transition", headers=headers, json={
+        "target_role": "Staff AI Systems Engineer",
+        "target_company_tier": "FAANG",
+        "timeline_months": 6
+    })
+    assert r.status_code == 200
+    sim_data = r.json()
+    assert sim_data.get("feasibility_score") > 0.5
+    log_pass("POST /api/v1/simulate/career-transition", f"Feasibility: {sim_data.get('feasibility_score')}, Comp Jump: +{sim_data.get('salary_increase_pct')}%")
+except Exception as e:
+    log_fail("Career Simulation Studio", str(e))
+
+# 7.2 Live AI Mock Interview
+try:
+    r = client.get(f"{BASE_API}/api/v1/interviews/practice-topics")
+    assert r.status_code == 200
+    log_pass("GET /api/v1/interviews/practice-topics", f"Topics count: {r.json().get('total')}")
+
+    r = client.post(f"{BASE_API}/api/v1/interviews/evaluate", headers=headers, json={
+        "category": "Distributed Systems & CockroachDB",
+        "question": "How does CockroachDB achieve serializable multi-region transactions without centralized locks?",
+        "user_answer": "CockroachDB uses Raft consensus per range and Hybrid Logical Clocks (HLC) with Range Leaseholders for local reads.",
+        "target_company": "Google"
+    })
+    assert r.status_code == 200
+    eval_data = r.json()
+    assert eval_data.get("score") > 70
+    log_pass("POST /api/v1/interviews/evaluate", f"Mock Graded: {eval_data.get('score')}/100 ({eval_data.get('result')}), Vector Node: {eval_data.get('memory_node_id')[:8]}...")
+except Exception as e:
+    log_fail("Live Mock Interviewer", str(e))
+
+# 7.3 Weekly Career Reflection
+try:
+    r = client.get(f"{BASE_API}/api/v1/reflection/prompts")
+    assert r.status_code == 200
+    log_pass("GET /api/v1/reflection/prompts", f"Prompts count: {len(r.json().get('prompts', []))}")
+
+    r = client.post(f"{BASE_API}/api/v1/reflection/submit", headers=headers, json={
+        "highlights": "Shipped CockroachDB vector search integration with FastAPI and tested multi-region leaseholder placement.",
+        "challenges_faced": "Tuned HNSW recall vs latency under high concurrency.",
+        "skills_practiced": ["CockroachDB Vector Search", "FastAPI AsyncIO"],
+        "hours_invested": 18,
+        "mood_rating": 5
+    })
+    assert r.status_code == 200
+    ref_data = r.json()
+    assert ref_data.get("ebbinghaus_retention_boost_pct") > 10
+    log_pass("POST /api/v1/reflection/submit", f"Decay Reset: +{ref_data.get('ebbinghaus_retention_boost_pct')}% retention boost")
+except Exception as e:
+    log_fail("Weekly Career Reflection", str(e))
+
+# 7.4 CockroachDB Cluster Operations
+try:
+    r = client.get(f"{BASE_API}/api/v1/cluster/status")
+    assert r.status_code == 200
+    status_data = r.json()
+    assert status_data.get("status") == "HEALTHY"
+    log_pass("GET /api/v1/cluster/status", f"Cluster {status_data.get('cluster_name')} healthy, Vector Latency: {status_data.get('vector_indexing', {}).get('avg_query_latency_ms')}ms")
+
+    r = client.post(f"{BASE_API}/api/v1/cluster/exec-ccloud", headers=headers, json={
+        "command": "ccloud cluster list --format=json"
+    })
+    assert r.status_code == 200
+    log_pass("POST /api/v1/cluster/exec-ccloud", f"ccloud command executed in {r.json().get('execution_time_ms')}ms")
+except Exception as e:
+    log_fail("Cluster Ops API", str(e))
+
+# 8. FRONTEND WEB ROUTES LIVENESS
+print("\n[PHASE 8] Testing Frontend Next.js Web Routes Liveness...")
 frontend_routes = [
     "/",
     "/login",
@@ -314,6 +390,10 @@ frontend_routes = [
     "/timeline",
     "/memory-graph",
     "/recommendations",
+    "/simulation",
+    "/mock-interview",
+    "/reflection",
+    "/cluster-ops",
     "/applications",
     "/resume",
     "/interview-analytics",

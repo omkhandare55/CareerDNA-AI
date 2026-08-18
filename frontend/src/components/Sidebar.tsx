@@ -17,7 +17,11 @@ import {
   Settings,
   LogOut,
   TrendingUp,
-  Zap
+  Zap,
+  Compass,
+  Mic,
+  BookOpen,
+  Server
 } from "lucide-react";
 import { apiGet } from "@/lib/api";
 
@@ -27,6 +31,10 @@ const NAV_ITEMS = [
   { name: "Memory Timeline", path: "/timeline", icon: History },
   { name: "Memory Graph", path: "/memory-graph", icon: Network },
   { name: "Recommendations", path: "/recommendations", icon: Sparkles },
+  { name: "Career Simulation", path: "/simulation", icon: Compass },
+  { name: "AI Mock Practice", path: "/mock-interview", icon: Mic },
+  { name: "Weekly Reflection", path: "/reflection", icon: BookOpen },
+  { name: "Cluster Operations", path: "/cluster-ops", icon: Server },
   { name: "Applications", path: "/applications", icon: Briefcase },
   { name: "Resume & ATS", path: "/resume", icon: FileText },
   { name: "Interview Analytics", path: "/interview-analytics", icon: Target },

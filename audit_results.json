@@ -10,7 +10,7 @@
     },
     {
       "test": "POST /api/v1/auth/register",
-      "detail": "User registered (ID: d6e2f3a9-76bb-4e53-bd82-f3d70e8a3a43) with Bearer token"
+      "detail": "User registered (ID: d48c2ccf-dbc4-4ac7-8a27-f4db9a2da06a) with Bearer token"
     },
     {
       "test": "POST /api/v1/auth/login",
@@ -18,7 +18,7 @@
     },
     {
       "test": "GET /api/v1/auth/me",
-      "detail": "Authenticated as test_auditor_1787040739@careerdna.ai (Lead AI Engineer)"
+      "detail": "Authenticated as test_auditor_1787043122@careerdna.ai (Lead AI Engineer)"
     },
     {
       "test": "GET /api/v1/dna",
@@ -30,10 +30,10 @@
     },
     {
       "test": "POST /api/v1/skills",
-      "detail": "Created skill d7abf053-4a6c-4e90-822e-21ecc83f4b79"
+      "detail": "Created skill de65acd9-cc86-4759-98a9-4e048c179928"
     },
     {
-      "test": "DELETE /api/v1/skills/d7abf053-4a6c-4e90-822e-21ecc83f4b79",
+      "test": "DELETE /api/v1/skills/de65acd9-cc86-4759-98a9-4e048c179928",
       "detail": "Skill deleted successfully"
     },
     {
@@ -46,7 +46,7 @@
     },
     {
       "test": "POST /api/v1/memory",
-      "detail": "Created memory node 038527a1-ac1c-485b-9f16-1d1aa3a3cd73"
+      "detail": "Created memory node 5e6bd008-29a5-4681-8e46-d4c8924fceed"
     },
     {
       "test": "GET /api/v1/interviews",
@@ -58,10 +58,10 @@
     },
     {
       "test": "POST /api/v1/learning",
-      "detail": "Created learning course caf99a58-1721-45e6-b916-bd7fcc0cfaf0"
+      "detail": "Created learning course 25a71c7b-28c5-4e6b-b9a0-3e1b05500706"
     },
     {
-      "test": "PATCH /api/v1/learning/caf99a58-1721-45e6-b916-bd7fcc0cfaf0",
+      "test": "PATCH /api/v1/learning/25a71c7b-28c5-4e6b-b9a0-3e1b05500706",
       "detail": "Course completed"
     },
     {
@@ -69,12 +69,12 @@
       "detail": "Total Notifications: 3"
     },
     {
-      "test": "PATCH /api/v1/notifications/0555d0bf-0636-455e-8bc5-646e6eaf716b/read",
+      "test": "PATCH /api/v1/notifications/33ac6f22-93c5-4442-9b49-b7a6631ce1f0/read",
       "detail": "Marked notification as read"
     },
     {
       "test": "POST /api/v1/documents/presigned-url",
-      "detail": "Upload URL generated: resumes/d6e2f3a9-76bb-4e53-bd82-f3d70e8a3a43/a35797db-3bbd-484c-9a32-913cf5a37c9a_my_resume_2026.pdf"
+      "detail": "Upload URL generated: resumes/d48c2ccf-dbc4-4ac7-8a27-f4db9a2da06a/11ae926e-bc67-44a9-9246-0b0ddaa071fb_my_resume_2026.pdf"
     },
     {
       "test": "POST /api/v1/agent/recommend (SSE)",
@@ -99,6 +99,38 @@
     {
       "test": "SignalRanker.rank_signals()",
       "detail": "Top signal: 'Senior AI Agent Engineer'"
+    },
+    {
+      "test": "GET /api/v1/simulate/targets",
+      "detail": "Targets count: 4"
+    },
+    {
+      "test": "POST /api/v1/simulate/career-transition",
+      "detail": "Feasibility: 0.87, Comp Jump: +106.7%"
+    },
+    {
+      "test": "GET /api/v1/interviews/practice-topics",
+      "detail": "Topics count: 4"
+    },
+    {
+      "test": "POST /api/v1/interviews/evaluate",
+      "detail": "Mock Graded: 88/100 (EXCELLENT), Vector Node: bd63a3fe..."
+    },
+    {
+      "test": "GET /api/v1/reflection/prompts",
+      "detail": "Prompts count: 3"
+    },
+    {
+      "test": "POST /api/v1/reflection/submit",
+      "detail": "Decay Reset: +33.0% retention boost"
+    },
+    {
+      "test": "GET /api/v1/cluster/status",
+      "detail": "Cluster silk-ninja-32317 healthy, Vector Latency: 38.4ms"
+    },
+    {
+      "test": "POST /api/v1/cluster/exec-ccloud",
+      "detail": "ccloud command executed in 0.0ms"
     },
     {
       "test": "GET /",
@@ -130,6 +162,22 @@
     },
     {
       "test": "GET /recommendations",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /simulation",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /mock-interview",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /reflection",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /cluster-ops",
       "detail": "HTTP 200 OK"
     },
     {

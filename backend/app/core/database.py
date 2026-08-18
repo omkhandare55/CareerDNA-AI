@@ -184,7 +184,7 @@ class _InMemoryStore:
 class CockroachDBStore:
     """Production CockroachDB store executing distributed SQL & Vector searches."""
 
-    def __init__(self, connection_pool: pool.SimpleConnectionPool):
+    def __init__(self, connection_pool: pool.ThreadedConnectionPool):
         self._pool = connection_pool
 
     def _normalize_table(self, table: str) -> str:
@@ -192,14 +192,46 @@ class CockroachDBStore:
             return "career_memories"
         return table
 
+    def _get_conn(self):
+        try:
+            conn = self._pool.getconn()
+            if conn.closed != 0:
+                self._pool.putconn(conn, close=True)
+                conn = self._pool.getconn()
+            # Fast connection liveness check
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1;")
+            return conn
+        except Exception:
+            # Re-acquire
+            return self._pool.getconn()
+
+    def _put_conn(self, conn, is_error: bool = False):
+        if conn is None:
+            return
+        try:
+            if is_error or conn.closed != 0:
+                if conn.closed == 0:
+                    try:
+                        conn.rollback()
+                    except Exception:
+                        pass
+                self._pool.putconn(conn, close=True)
+            else:
+                self._pool.putconn(conn)
+        except Exception:
+            pass
+
     def insert(self, table: str, row: Dict) -> Dict:
         table = self._normalize_table(table)
         row_copy = dict(row)
         if "id" not in row_copy or not row_copy["id"]:
             row_copy["id"] = str(uuid.uuid4())
 
-        conn = self._pool.getconn()
+        conn = None
+        is_err = False
         try:
+            conn = self._get_conn()
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 columns = []
                 values = []
@@ -218,22 +250,33 @@ class CockroachDBStore:
                 conn.commit()
                 return result
         except Exception as e:
-            conn.rollback()
+            is_err = True
+            if conn and conn.closed == 0:
+                try:
+                    conn.rollback()
+                except Exception:
+                    pass
             logger.error(f"CockroachDB insert error on {table}: {e}")
             raise
         finally:
-            self._pool.putconn(conn)
+            self._put_conn(conn, is_err)
 
     def get_by_id(self, table: str, row_id: str) -> Optional[Dict]:
         table = self._normalize_table(table)
-        conn = self._pool.getconn()
+        conn = None
+        is_err = False
         try:
+            conn = self._get_conn()
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 cur.execute(f"SELECT * FROM {table} WHERE id = %s;", (row_id,))
                 res = cur.fetchone()
                 return dict(res) if res else None
+        except Exception as e:
+            is_err = True
+            logger.error(f"CockroachDB get_by_id error on {table}: {e}")
+            return None
         finally:
-            self._pool.putconn(conn)
+            self._put_conn(conn, is_err)
 
     def find_one(self, table: str, **filters) -> Optional[Dict]:
         results = self.find_all(table, **filters)
@@ -241,8 +284,10 @@ class CockroachDBStore:
 
     def find_all(self, table: str, **filters) -> List[Dict]:
         table = self._normalize_table(table)
-        conn = self._pool.getconn()
+        conn = None
+        is_err = False
         try:
+            conn = self._get_conn()
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 if not filters:
                     cur.execute(f"SELECT * FROM {table} ORDER BY created_at DESC;")
@@ -253,18 +298,21 @@ class CockroachDBStore:
                 rows = cur.fetchall()
                 return [dict(r) for r in rows]
         except Exception as e:
+            is_err = True
             logger.error(f"CockroachDB find_all error on {table}: {e}")
             return []
         finally:
-            self._pool.putconn(conn)
+            self._put_conn(conn, is_err)
 
     def update(self, table: str, row_id: str, updates: Dict) -> Optional[Dict]:
         table = self._normalize_table(table)
         if not updates:
             return self.get_by_id(table, row_id)
 
-        conn = self._pool.getconn()
+        conn = None
+        is_err = False
         try:
+            conn = self._get_conn()
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 set_clauses = []
                 values = []
@@ -282,27 +330,40 @@ class CockroachDBStore:
                 conn.commit()
                 return dict(result) if result else None
         except Exception as e:
-            conn.rollback()
+            is_err = True
+            if conn and conn.closed == 0:
+                try:
+                    conn.rollback()
+                except Exception:
+                    pass
             logger.error(f"CockroachDB update error on {table}: {e}")
             raise
         finally:
-            self._pool.putconn(conn)
+            self._put_conn(conn, is_err)
 
     def delete(self, table: str, row_id: str) -> bool:
         table = self._normalize_table(table)
-        conn = self._pool.getconn()
+        conn = None
+        is_err = False
         try:
+            conn = self._get_conn()
             with conn.cursor() as cur:
                 cur.execute(f"DELETE FROM {table} WHERE id = %s;", (row_id,))
                 conn.commit()
                 return cur.rowcount > 0
+        except Exception as e:
+            is_err = True
+            logger.error(f"CockroachDB delete error on {table}: {e}")
+            return False
         finally:
-            self._pool.putconn(conn)
+            self._put_conn(conn, is_err)
 
     def vector_search(self, user_id: str, query_embedding: List[float], top_k: int = 5) -> List[Dict]:
         """Perform native CockroachDB distributed vector cosine similarity search."""
-        conn = self._pool.getconn()
+        conn = None
+        is_err = False
         try:
+            conn = self._get_conn()
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 vec_str = "[" + ",".join(str(x) for x in query_embedding) + "]"
                 sql = """
@@ -318,18 +379,21 @@ class CockroachDBStore:
                 rows = cur.fetchall()
                 return [dict(r) for r in rows]
         except Exception as e:
+            is_err = True
             logger.warning(f"CockroachDB vector_search query note: {e}")
             return self.find_all("career_memories", user_id=user_id)[:top_k]
         finally:
-            self._pool.putconn(conn)
+            self._put_conn(conn, is_err)
 
     def seed_demo_data(self, user_id: str):
         """Batch-seed demo data in CockroachDB inside a single connection transaction."""
         _mem_seeder = _InMemoryStore()
         _mem_seeder.seed_demo_data(user_id)
 
-        conn = self._pool.getconn()
+        conn = None
+        is_err = False
         try:
+            conn = self._get_conn()
             with conn.cursor() as cur:
                 for tbl in ["skills", "career_memories", "interview_history", "learning_progress", "recommendations", "notifications"]:
                     for row in _mem_seeder.find_all(tbl):
@@ -342,10 +406,15 @@ class CockroachDBStore:
                         cur.execute(f"INSERT INTO {tbl} ({', '.join(cols)}) VALUES ({', '.join(placeholders)}) ON CONFLICT DO NOTHING;", vals)
             conn.commit()
         except Exception as e:
-            conn.rollback()
+            is_err = True
+            if conn and conn.closed == 0:
+                try:
+                    conn.rollback()
+                except Exception:
+                    pass
             logger.warning(f"Batch seed note: {e}")
         finally:
-            self._pool.putconn(conn)
+            self._put_conn(conn, is_err)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -354,7 +423,7 @@ class CockroachDBStore:
 
 _demo_store = _InMemoryStore()
 _cockroach_store: Optional[CockroachDBStore] = None
-_db_pool: Optional[pool.SimpleConnectionPool] = None
+_db_pool: Optional[pool.ThreadedConnectionPool] = None
 
 
 def get_demo_store():
@@ -383,12 +452,16 @@ async def init_db():
     logger.info(f"🟢 Connecting to CockroachDB Cloud cluster...")
 
     try:
-        _db_pool = pool.SimpleConnectionPool(
-            minconn=2,
+        _db_pool = pool.ThreadedConnectionPool(
+            minconn=1,
             maxconn=20,
             dsn=dsn,
             sslmode="require",
-            connect_timeout=10
+            connect_timeout=15,
+            keepalives=1,
+            keepalives_idle=30,
+            keepalives_interval=10,
+            keepalives_count=5
         )
         _cockroach_store = CockroachDBStore(_db_pool)
         logger.info("✅ CockroachDB Cloud connection pool initialized (20 connections).")
