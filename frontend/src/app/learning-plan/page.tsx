@@ -1,9 +1,23 @@
 "use client";
 
-import { GraduationCap, CheckCircle2, ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { GraduationCap, CheckCircle2, ArrowRight, Plus } from "lucide-react";
+import { apiGet } from "@/lib/api";
 
 export default function LearningPlanPage() {
-  const steps = [
+  const [learningData, setLearningData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    apiGet('/api/v1/learning')
+      .then((data) => {
+        setLearningData(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const fallbackSteps = [
     { title: "Core Python & Data Structures", status: "COMPLETED", duration: "2 WEEKS", score: "+10 POINTS", border: "border-slate-700 shadow-[4px_4px_0px_0px_#020617]" },
     { title: "FastAPI Async Web Services", status: "COMPLETED", duration: "1.5 WEEKS", score: "+8 POINTS", border: "border-slate-700 shadow-[4px_4px_0px_0px_#020617]" },
     { title: "AWS Machine Learning Specialty", status: "COMPLETED", duration: "3 WEEKS", score: "+12 POINTS", border: "border-slate-700 shadow-[4px_4px_0px_0px_#020617]" },
@@ -11,6 +25,25 @@ export default function LearningPlanPage() {
     { title: "LangGraph State Machine Agent Systems", status: "UPCOMING", duration: "1 WEEK", score: "+10 POINTS", border: "border-slate-700 shadow-[4px_4px_0px_0px_#020617]" },
     { title: "Distributed System Design Masterclass", status: "UPCOMING", duration: "2 WEEKS", score: "+14 POINTS", border: "border-slate-700 shadow-[4px_4px_0px_0px_#020617]" },
   ];
+
+  const allItems = [
+    ...(learningData?.completed ?? []),
+    ...(learningData?.in_progress ?? []),
+    ...(learningData?.not_started ?? []),
+  ];
+
+  const steps = allItems.length > 0
+    ? allItems.map((item: any) => ({
+        title: item.resource_title,
+        status: item.status,
+        duration: `${item.platform || "Self-Paced"} • ${item.progress_percentage}%`,
+        score: "+8 POINTS",
+        active: item.status === "IN_PROGRESS",
+        border: item.status === "IN_PROGRESS" ? "border-yellow-400 shadow-[6px_6px_0px_0px_#FACC15]" : "border-slate-700 shadow-[4px_4px_0px_0px_#020617]"
+      }))
+    : fallbackSteps;
+
+  const completionPct = learningData?.completion_rate ?? 72;
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-12 font-sans">
@@ -26,18 +59,18 @@ export default function LearningPlanPage() {
         </div>
         <div className="text-right">
           <p className="text-[10px] text-slate-400 font-black uppercase">Roadmap Completion</p>
-          <p className="text-3xl font-black font-mono text-green-400">72%</p>
+          <p className="text-3xl font-black font-mono text-green-400">{completionPct}%</p>
         </div>
       </div>
 
       {/* Progress Bar */}
       <div className="w-full bg-[#020617] h-4 border-2 border-slate-700 overflow-hidden p-0.5">
-        <div className="bg-[#22C55E] h-full w-[72%] transition-all duration-500"></div>
+        <div className="bg-[#22C55E] h-full transition-all duration-500" style={{ width: `${completionPct}%` }}></div>
       </div>
 
       {/* Roadmap Step Nodes */}
       <div className="space-y-4 font-mono">
-        {steps.map((step, idx) => (
+        {steps.map((step: any, idx: number) => (
           <div
             key={idx}
             className={`p-5 bg-[#0F172A] border-4 ${step.border} transition`}

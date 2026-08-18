@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Network, ZoomIn, ZoomOut, RefreshCw, Info, Layers } from "lucide-react";
+import { apiGet } from "@/lib/api";
 
 interface NodeData {
   id: string;
@@ -16,8 +17,19 @@ interface NodeData {
 
 export default function MemoryGraphPage() {
   const [selectedNode, setSelectedNode] = useState<NodeData | null>(null);
+  const [memories, setMemories] = useState<any[]>([]);
 
-  const nodes: NodeData[] = [
+  useEffect(() => {
+    apiGet('/api/v1/memory')
+      .then((data) => {
+        if (data?.memories) {
+          setMemories(data.memories);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const defaultNodes: NodeData[] = [
     { id: "n1", label: "Senior AI Engineer Goal", category: "GOAL", confidence: 0.98, evidence: "Primary career objective set by user", source: "CAREER_GOALS", x: 400, y: 100 },
     { id: "n2", label: "LangGraph Framework", category: "SKILL", confidence: 0.95, evidence: "Agentic architecture implementation", source: "PROJECT", x: 220, y: 220 },
     { id: "n3", label: "CockroachDB HNSW Vector Search", category: "SKILL", confidence: 0.92, evidence: "Distributed SQL vector table setup", source: "SCHEMA_DDL", x: 580, y: 220 },
@@ -26,13 +38,45 @@ export default function MemoryGraphPage() {
     { id: "n6", label: "Python & FastAPI", category: "SKILL", confidence: 0.96, evidence: "4 GitHub Repos + Async Gateway", source: "GITHUB", x: 400, y: 320 }
   ];
 
+  const nodes: NodeData[] = memories.length > 0
+    ? memories.slice(0, 6).map((m, idx) => {
+        const positions = [
+          { x: 400, y: 100 },
+          { x: 220, y: 220 },
+          { x: 580, y: 220 },
+          { x: 180, y: 380 },
+          { x: 620, y: 380 },
+          { x: 400, y: 320 }
+        ];
+        const categoryMap: Record<string, "SKILL" | "GOAL" | "INTERVIEW" | "CERT"> = {
+          "INTERVIEW_FAILURE": "INTERVIEW",
+          "INTERVIEW_PASS": "INTERVIEW",
+          "CERTIFICATE": "CERT",
+          "RESUME": "SKILL",
+          "PROJECT": "SKILL",
+          "REFLECTION": "GOAL"
+        };
+        const pos = positions[idx % positions.length];
+        return {
+          id: m.id || `m_${idx}`,
+          label: m.summary.length > 25 ? m.summary.slice(0, 25) + "..." : m.summary,
+          category: categoryMap[m.memory_type] || "SKILL",
+          confidence: m.importance_score || 0.9,
+          evidence: m.summary,
+          source: m.memory_type || "COCKROACHDB_MEMORY",
+          x: pos.x,
+          y: pos.y
+        };
+      })
+    : defaultNodes;
+
   const edges = [
-    { from: "n1", to: "n2" },
-    { from: "n1", to: "n3" },
-    { from: "n2", to: "n4" },
-    { from: "n3", to: "n5" },
-    { from: "n6", to: "n2" },
-    { from: "n6", to: "n3" }
+    { from: nodes[0]?.id || "n1", to: nodes[1]?.id || "n2" },
+    { from: nodes[0]?.id || "n1", to: nodes[2]?.id || "n3" },
+    { from: nodes[1]?.id || "n2", to: nodes[3]?.id || "n4" },
+    { from: nodes[2]?.id || "n3", to: nodes[4]?.id || "n5" },
+    { from: nodes[5]?.id || "n6", to: nodes[1]?.id || "n2" },
+    { from: nodes[5]?.id || "n6", to: nodes[2]?.id || "n3" }
   ];
 
   return (
@@ -44,7 +88,7 @@ export default function MemoryGraphPage() {
             <Network className="w-7 h-7 text-cyan-400" /> Memory Graph Network Visualization
           </h1>
           <p className="text-xs text-slate-400 mt-1 font-medium">
-            Visualizing directed memory relationships (`CAUSED_BY`, `SUPERSEDES`, `IMPROVED_BY`) across career milestones.
+            Visualizing directed memory relationships (`CAUSED_BY`, `SUPERSEDES`, `IMPROVED_BY`) across CockroachDB vector memories.
           </p>
         </div>
         <div className="flex items-center gap-2 font-mono">
@@ -66,8 +110,9 @@ export default function MemoryGraphPage() {
           <svg className="w-full h-[450px]" viewBox="0 0 800 480">
             {/* Edges */}
             {edges.map((edge, idx) => {
-              const sourceNode = nodes.find(n => n.id === edge.from)!;
-              const targetNode = nodes.find(n => n.id === edge.to)!;
+              const sourceNode = nodes.find(n => n.id === edge.from);
+              const targetNode = nodes.find(n => n.id === edge.to);
+              if (!sourceNode || !targetNode) return null;
               return (
                 <line
                   key={idx}

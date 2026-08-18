@@ -1,13 +1,39 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Bell } from "lucide-react";
+import { apiGet } from "@/lib/api";
 
 export default function NotificationsPage() {
-  const notifs = [
+  const [notifsData, setNotifsData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    apiGet('/api/v1/notifications')
+      .then((data) => {
+        if (data?.notifications) {
+          setNotifsData(data.notifications);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const fallbackNotifs = [
     { title: "Career DNA Evolved Today (+3 Points)", desc: "AI analyzed mock interview feedback and updated vector recommendations.", time: "1 HOUR AGO", unread: true, border: "border-yellow-400 shadow-[4px_4px_0px_0px_#FACC15]" },
     { title: "Weekly Reflection Scheduled", desc: "Share what you built this week to keep memory fresh.", time: "YESTERDAY", unread: false, border: "border-slate-700 shadow-[2px_2px_0px_0px_#020617]" },
     { title: "AWS Certificate Verified", desc: "Added to persistent memory table career_memories.", time: "3 DAYS AGO", unread: false, border: "border-slate-700 shadow-[2px_2px_0px_0px_#020617]" },
   ];
+
+  const notifs = notifsData.length > 0
+    ? notifsData.map((n) => ({
+        title: n.title,
+        desc: n.message,
+        time: n.created_at ? new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "RECENT",
+        unread: !n.is_read,
+        border: !n.is_read ? "border-yellow-400 shadow-[4px_4px_0px_0px_#FACC15]" : "border-slate-700 shadow-[2px_2px_0px_0px_#020617]"
+      }))
+    : fallbackNotifs;
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12 font-sans">

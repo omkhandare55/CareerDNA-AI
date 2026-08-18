@@ -1,25 +1,42 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Dna, CheckCircle2, AlertTriangle, Zap } from "lucide-react";
+import { apiGet } from "@/lib/api";
 
 export default function CareerDNAPage() {
+  const [dna, setDna] = useState<any>(null);
+  const [skills, setSkills] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      apiGet('/api/v1/dna').catch(() => null),
+      apiGet('/api/v1/skills').catch(() => null),
+    ]).then(([dnaData, skillsData]) => {
+      setDna(dnaData);
+      setSkills(skillsData);
+      setLoading(false);
+    });
+  }, []);
+
   const traits = [
-    { name: "Problem Solving", score: 92, level: "Exceptional", color: "bg-[#3B82F6]", border: "border-blue-500 shadow-[4px_4px_0px_0px_#3B82F6]" },
-    { name: "Learning Speed", score: 95, level: "Top 5%", color: "bg-[#EC4899]", border: "border-pink-500 shadow-[4px_4px_0px_0px_#EC4899]" },
-    { name: "Consistency", score: 90, level: "High Streak", color: "bg-[#22C55E]", border: "border-green-500 shadow-[4px_4px_0px_0px_#22C55E]" },
-    { name: "Backend Architecture", score: 88, level: "Advanced", color: "bg-[#A855F7]", border: "border-purple-500 shadow-[4px_4px_0px_0px_#A855F7]" },
-    { name: "Leadership & Mentorship", score: 71, level: "Developing", color: "bg-[#FACC15] text-slate-950", border: "border-yellow-400 shadow-[4px_4px_0px_0px_#FACC15]" },
-    { name: "Communication", score: 69, level: "Needs Practice", color: "bg-[#EF4444]", border: "border-red-500 shadow-[4px_4px_0px_0px_#EF4444]" },
+    { name: "Problem Solving", score: dna?.readiness_breakdown?.problem_solving ?? 92, level: "Exceptional", color: "bg-[#3B82F6]", border: "border-blue-500 shadow-[4px_4px_0px_0px_#3B82F6]" },
+    { name: "Learning Speed", score: dna?.readiness_breakdown?.learning_velocity ?? 95, level: "Top 5%", color: "bg-[#EC4899]", border: "border-pink-500 shadow-[4px_4px_0px_0px_#EC4899]" },
+    { name: "Consistency", score: dna?.readiness_breakdown?.consistency ?? 90, level: "High Streak", color: "bg-[#22C55E]", border: "border-green-500 shadow-[4px_4px_0px_0px_#22C55E]" },
+    { name: "Backend Architecture", score: dna?.readiness_breakdown?.architecture ?? 88, level: "Advanced", color: "bg-[#A855F7]", border: "border-purple-500 shadow-[4px_4px_0px_0px_#A855F7]" },
+    { name: "Leadership & Mentorship", score: dna?.readiness_breakdown?.leadership ?? 71, level: "Developing", color: "bg-[#FACC15] text-slate-950", border: "border-yellow-400 shadow-[4px_4px_0px_0px_#FACC15]" },
+    { name: "Communication", score: dna?.readiness_breakdown?.communication ?? 69, level: "Needs Practice", color: "bg-[#EF4444]", border: "border-red-500 shadow-[4px_4px_0px_0px_#EF4444]" },
   ];
 
-  const strengths = [
+  const strengths = dna?.strengths ?? [
     { name: "Python / FastAPI", evidence: "Verified by 4 GitHub Repos + AWS ML Cert" },
     { name: "CockroachDB Vector Search", evidence: "Verified by Schema DDL + Memory Engine Project" },
     { name: "LangGraph State Machines", evidence: "Verified by Agentic Architecture implementation" },
     { name: "System Design Concepts", evidence: "Passed 3 technical mock assessments" },
   ];
 
-  const weaknesses = [
+  const weaknesses = dna?.weaknesses ?? [
     { name: "System Design Edge Cases", impact: "HIGH RISK", fix: "Practice distributed consensus & Raft protocol" },
     { name: "Behavioral Storytelling", impact: "MEDIUM RISK", fix: "Complete 2 behavioral STAR method mock runs" },
     { name: "Cloud IAM Hardening", impact: "LOW RISK", fix: "Review AWS KMS least-privilege policies" },
@@ -76,19 +93,19 @@ export default function CareerDNAPage() {
             <h3 className="text-sm font-black text-slate-100 uppercase tracking-wider flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-green-400" /> Verified Core Strengths
             </h3>
-            <span className="text-xs text-green-400 font-bold">4 SIGNALS</span>
+            <span className="text-xs text-green-400 font-bold">{strengths.length} SIGNALS</span>
           </div>
 
           <div className="space-y-3">
-            {strengths.map((item, i) => (
+            {strengths.map((item: any, i: number) => (
               <div key={i} className="p-4 bg-[#020617] border-2 border-slate-700 space-y-1">
                 <div className="flex items-center justify-between font-mono">
-                  <h4 className="text-xs font-black text-slate-100">{item.name}</h4>
+                  <h4 className="text-xs font-black text-slate-100">{item.name || item.skill_name}</h4>
                   <span className="text-[9px] font-black px-2 py-0.5 bg-green-500 text-slate-950 border border-slate-100 uppercase">
                     VERIFIED
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 font-medium">{item.evidence}</p>
+                <p className="text-[11px] text-slate-400 font-medium">{item.evidence || "Empirical achievement signal recorded."}</p>
               </div>
             ))}
           </div>
@@ -100,20 +117,20 @@ export default function CareerDNAPage() {
             <h3 className="text-sm font-black text-slate-100 uppercase tracking-wider flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-amber-400" /> Recorded Weaknesses & Risk Areas
             </h3>
-            <span className="text-xs text-amber-400 font-bold">3 FOCUS AREAS</span>
+            <span className="text-xs text-amber-400 font-bold">{weaknesses.length} FOCUS AREAS</span>
           </div>
 
           <div className="space-y-3">
-            {weaknesses.map((item, i) => (
+            {weaknesses.map((item: any, i: number) => (
               <div key={i} className="p-4 bg-[#020617] border-2 border-slate-700 space-y-1.5">
                 <div className="flex items-center justify-between font-mono">
-                  <h4 className="text-xs font-black text-slate-100">{item.name}</h4>
+                  <h4 className="text-xs font-black text-slate-100">{item.name || item.topic}</h4>
                   <span className="text-[9px] font-black px-2 py-0.5 bg-amber-400 text-slate-950 border border-slate-950 uppercase">
-                    {item.impact}
+                    {item.impact || "HIGH RISK"}
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-300 font-mono font-medium flex items-center gap-1">
-                  <Zap className="w-3.5 h-3.5 text-cyan-400" /> ACTION: {item.fix}
+                  <Zap className="w-3.5 h-3.5 text-cyan-400" /> ACTION: {item.fix || "Target deliberate practice session."}
                 </p>
               </div>
             ))}

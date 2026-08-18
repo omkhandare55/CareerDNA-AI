@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Dna,
@@ -18,6 +19,7 @@ import {
   TrendingUp,
   Zap
 } from "lucide-react";
+import { apiGet } from "@/lib/api";
 
 const NAV_ITEMS = [
   { name: "Command Center", path: "/dashboard", icon: LayoutDashboard },
@@ -35,6 +37,34 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [userName, setUserName] = useState("Vijay Kumar");
+  const [userInitials, setUserInitials] = useState("VK");
+  const [score, setScore] = useState(87);
+
+  useEffect(() => {
+    // Fetch profile and DNA metrics
+    Promise.all([
+      apiGet('/api/v1/auth/me').catch(() => null),
+      apiGet('/api/v1/dna').catch(() => null),
+    ]).then(([userData, dnaData]) => {
+      if (userData?.full_name) {
+        setUserName(userData.full_name);
+        const parts = userData.full_name.trim().split(" ");
+        setUserInitials(parts.length > 1 ? `${parts[0][0]}${parts[1][0]}`.toUpperCase() : parts[0].slice(0, 2).toUpperCase());
+      }
+      if (dnaData?.dna_score) {
+        setScore(dnaData.dna_score);
+      }
+    });
+  }, []);
+
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      router.push("/login");
+    }
+  };
 
   return (
     <aside className="fixed top-0 left-0 bottom-0 w-70 bg-[#0A0F1D] border-r-4 border-slate-800 flex flex-col justify-between z-40 select-none font-sans">
@@ -93,7 +123,7 @@ export default function Sidebar() {
             <div>
               <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest font-mono">Career Score</p>
               <p className="text-xl font-black text-slate-50 font-mono leading-none">
-                87 <span className="text-xs text-green-400 font-bold">↑ +3</span>
+                {score} <span className="text-xs text-green-400 font-bold">↑ +3</span>
               </p>
             </div>
           </div>
@@ -106,16 +136,17 @@ export default function Sidebar() {
         <div className="flex items-center justify-between pt-1 px-1">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 bg-[#3B82F6] text-white border-2 border-slate-100 flex items-center justify-center font-black text-xs shadow-[2px_2px_0px_0px_#EC4899]">
-              VK
+              {userInitials}
             </div>
             <div className="truncate max-w-[130px]">
-              <p className="text-xs font-black text-slate-100 truncate uppercase">Vijay Kumar</p>
+              <p className="text-xs font-black text-slate-100 truncate uppercase">{userName}</p>
               <p className="text-[9px] text-yellow-400 font-bold truncate uppercase tracking-tight flex items-center gap-1 font-mono">
                 <Zap className="w-3 h-3 text-cyan-400 inline" /> Lifetime Memory
               </p>
             </div>
           </div>
           <button
+            onClick={handleLogout}
             title="Logout"
             className="p-1.5 bg-[#0F172A] border-2 border-slate-700 hover:border-red-400 text-slate-400 hover:text-red-400 transition"
           >

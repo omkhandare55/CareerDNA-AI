@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Sparkles,
   TrendingUp,
@@ -15,11 +15,30 @@ import {
   ChevronRight
 } from "lucide-react";
 import ExplainModal from "@/components/ExplainModal";
+import { apiGet } from "@/lib/api";
 
 export default function Dashboard() {
   const [isExplainOpen, setIsExplainOpen] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamProgress, setStreamProgress] = useState(100);
+
+  const [loading, setLoading] = useState(true);
+  const [dna, setDna] = useState<any>(null);
+  const [skills, setSkills] = useState<any>(null);
+  const [timeline, setTimeline] = useState<any>(null);
+
+  useEffect(() => {
+    Promise.all([
+      apiGet('/api/v1/dna').catch(() => null),
+      apiGet('/api/v1/skills').catch(() => null),
+      apiGet('/api/v1/timeline').catch(() => null),
+    ]).then(([dnaData, skillsData, timelineData]) => {
+      setDna(dnaData);
+      setSkills(skillsData);
+      setTimeline(timelineData);
+      setLoading(false);
+    });
+  }, []);
 
   const handleSimulateStreaming = () => {
     setIsStreaming(true);
@@ -35,6 +54,40 @@ export default function Dashboard() {
     }, 300);
   };
 
+  const score = dna?.dna_score ?? 87;
+  const name = "Vijay"; // Or from auth/me if we want, but keeping hardcoded fallback if needed
+  const verifiedSkillsCount = skills?.total ?? 42;
+  const activeApps = 31; // Mock fallback
+  const interviewRate = "25.8%"; // Mock fallback
+
+  const recentEvents = timeline?.events?.slice(0, 3) ?? [
+    {
+      time: "YESTERDAY",
+      title: "FAANG Mock Interview Analysis Logged",
+      desc: "AI detected weakness in System Design & Vector Indexing during mock interview.",
+      impact: "RECOMMENDATION SHIFT",
+      badge: "bg-amber-500 text-slate-950 border-slate-950"
+    },
+    {
+      time: "3 DAYS AGO",
+      title: "Completed AWS Machine Learning Specialty Cert",
+      desc: "Verified credential added to persistent memory. Technical depth score increased from 82 to 86.",
+      impact: "+4 DNA POINTS",
+      badge: "bg-green-500 text-slate-950 border-slate-950"
+    },
+    {
+      time: "5 DAYS AGO",
+      title: "Resume v3.2 Uploaded & Parsed",
+      desc: "Extracted FastAPI, LangGraph, and CockroachDB skills into database profile.",
+      impact: "PROFILE REFINED",
+      badge: "bg-blue-500 text-white border-slate-100"
+    }
+  ];
+
+  if (loading) {
+    return <div className="text-white p-8 animate-pulse font-mono">Loading Neural Links...</div>;
+  }
+
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-12 font-sans">
       {/* 1. HERO SECTION - NEO-BRUTALIST */}
@@ -46,7 +99,7 @@ export default function Dashboard() {
               <span>Career DNA Evolved Today</span>
             </div>
             <h1 className="text-4xl font-black tracking-tight text-slate-50 uppercase font-mono">
-              Hello Vijay 👋
+              Hello {name} 👋
             </h1>
             <p className="text-xs text-slate-300 font-medium max-w-2xl leading-relaxed">
               Your lifelong AI Career Agent synthesized 4 new interview signals and updated your trajectory graph in CockroachDB.
@@ -58,7 +111,7 @@ export default function Dashboard() {
             <div>
               <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest font-mono">Career Readiness</p>
               <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="text-5xl font-black font-mono text-slate-50">87</span>
+                <span className="text-5xl font-black font-mono text-slate-50">{score}</span>
                 <span className="text-xs font-black text-green-400 flex items-center gap-0.5 font-mono">
                   <TrendingUp className="w-4 h-4" /> +3 W/W
                 </span>
@@ -82,10 +135,10 @@ export default function Dashboard() {
       {/* 2. QUICK STATS GRID - NEO-BRUTALIST CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {[
-          { label: "Verified Skills", value: "42", change: "+4 new", icon: Award, border: "border-blue-500 shadow-[4px_4px_0px_0px_#3B82F6]", badge: "bg-blue-500" },
-          { label: "Active Applications", value: "31", change: "8 interviewing", icon: Briefcase, border: "border-purple-500 shadow-[4px_4px_0px_0px_#A855F7]", badge: "bg-purple-500" },
-          { label: "Interview Rate", value: "25.8%", change: "+3.2% vs avg", icon: Target, border: "border-green-500 shadow-[4px_4px_0px_0px_#22C55E]", badge: "bg-green-500" },
-          { label: "Critical Gap", value: "System Design", change: "Action required", icon: Zap, border: "border-yellow-400 shadow-[4px_4px_0px_0px_#FACC15]", badge: "bg-yellow-400 text-slate-950" },
+          { label: "Verified Skills", value: verifiedSkillsCount.toString(), change: "+4 new", icon: Award, border: "border-blue-500 shadow-[4px_4px_0px_0px_#3B82F6]", badge: "bg-blue-500" },
+          { label: "Active Applications", value: activeApps.toString(), change: "8 interviewing", icon: Briefcase, border: "border-purple-500 shadow-[4px_4px_0px_0px_#A855F7]", badge: "bg-purple-500" },
+          { label: "Interview Rate", value: interviewRate, change: "+3.2% vs avg", icon: Target, border: "border-green-500 shadow-[4px_4px_0px_0px_#22C55E]", badge: "bg-green-500" },
+          { label: "Critical Gap", value: dna?.weaknesses?.[0]?.name || "System Design", change: "Action required", icon: Zap, border: "border-yellow-400 shadow-[4px_4px_0px_0px_#FACC15]", badge: "bg-yellow-400 text-slate-950" },
         ].map((stat, idx) => {
           const Icon = stat.icon;
           return (
@@ -196,40 +249,18 @@ export default function Dashboard() {
           </div>
 
           <div className="space-y-3">
-            {[
-              {
-                time: "YESTERDAY",
-                title: "FAANG Mock Interview Analysis Logged",
-                desc: "AI detected weakness in System Design & Vector Indexing during mock interview.",
-                impact: "RECOMMENDATION SHIFT",
-                badge: "bg-amber-500 text-slate-950 border-slate-950"
-              },
-              {
-                time: "3 DAYS AGO",
-                title: "Completed AWS Machine Learning Specialty Cert",
-                desc: "Verified credential added to persistent memory. Technical depth score increased from 82 to 86.",
-                impact: "+4 DNA POINTS",
-                badge: "bg-green-500 text-slate-950 border-slate-950"
-              },
-              {
-                time: "5 DAYS AGO",
-                title: "Resume v3.2 Uploaded & Parsed",
-                desc: "Extracted FastAPI, LangGraph, and CockroachDB skills into database profile.",
-                impact: "PROFILE REFINED",
-                badge: "bg-blue-500 text-white border-slate-100"
-              }
-            ].map((event, i) => (
+            {recentEvents.map((event: any, i: number) => (
               <div key={i} className="p-4 bg-[#020617] border-2 border-slate-700 flex items-start justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 font-mono">
-                    <span className="text-[10px] text-slate-400 font-bold">{event.time}</span>
+                    <span className="text-[10px] text-slate-400 font-bold">{event.time || event.date || "RECENTLY"}</span>
                     <span className="text-slate-600">•</span>
                     <h4 className="text-xs font-black text-slate-100 uppercase">{event.title}</h4>
                   </div>
                   <p className="text-xs text-slate-300 font-medium">{event.desc}</p>
                 </div>
-                <span className={`text-[9px] font-black px-2.5 py-1 border uppercase whitespace-nowrap font-mono ${event.badge}`}>
-                  {event.impact}
+                <span className={`text-[9px] font-black px-2.5 py-1 border uppercase whitespace-nowrap font-mono ${event.badge || "bg-blue-500 text-white border-slate-100"}`}>
+                  {event.impact || "VERIFIED"}
                 </span>
               </div>
             ))}
@@ -252,7 +283,7 @@ export default function Dashboard() {
                 { month: "FEB", score: 72, height: "h-[58%]" },
                 { month: "MAR", score: 78, height: "h-[70%]" },
                 { month: "APR", score: 84, height: "h-[82%]" },
-                { month: "MAY", score: 87, height: "h-[92%]", active: true },
+                { month: "MAY", score: score, height: "h-[92%]", active: true },
               ].map((bar, idx) => (
                 <div key={idx} className="flex-1 flex flex-col items-center gap-2">
                   <span className={`text-[10px] font-mono font-black ${bar.active ? "text-yellow-400" : "text-slate-400"}`}>

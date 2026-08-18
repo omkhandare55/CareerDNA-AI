@@ -1,8 +1,22 @@
 "use client";
 
-import { Target, Sparkles, MessageSquare } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Target, Sparkles, MessageSquare, CheckCircle2, XCircle } from "lucide-react";
+import { apiGet } from "@/lib/api";
 
 export default function InterviewAnalyticsPage() {
+  const [interviewsData, setInterviewsData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    apiGet('/api/v1/interviews')
+      .then((data) => {
+        setInterviewsData(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
   const topics = [
     { name: "System Design & Architecture", score: "88%", level: "STRONG", bar: "w-[88%] bg-[#3B82F6]" },
     { name: "Vector Indexing & RAG", score: "76%", level: "NEEDS PRACTICE", bar: "w-[76%] bg-[#A855F7]" },
@@ -10,6 +24,8 @@ export default function InterviewAnalyticsPage() {
     { name: "Graphs & Search Algorithms", score: "85%", level: "PROFICIENT", bar: "w-[85%] bg-[#06B6D4]" },
     { name: "Behavioral Communication", score: "70%", level: "DEVELOPING", bar: "w-[70%] bg-[#FACC15]" },
   ];
+
+  const recentInterview = interviewsData?.interviews?.[0];
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-12 font-sans">
@@ -47,27 +63,38 @@ export default function InterviewAnalyticsPage() {
 
         {/* Q&A Interview Replay */}
         <div className="bg-[#0F172A] p-6 border-4 border-slate-800 shadow-[6px_6px_0px_0px_#FACC15] space-y-4 font-mono">
-          <h3 className="text-xs font-black text-slate-100 uppercase tracking-wider flex items-center gap-2">
-            <MessageSquare className="w-4 h-4 text-blue-400" /> Recent Mock Q&A Analysis Replay
-          </h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-black text-slate-100 uppercase tracking-wider flex items-center gap-2">
+              <MessageSquare className="w-4 h-4 text-blue-400" /> Recent Mock Q&A Analysis Replay
+            </h3>
+            {recentInterview && (
+              <span className={`text-[9px] font-black px-2 py-0.5 border uppercase ${recentInterview.result === "PASSED" ? "bg-green-500 text-slate-950" : "bg-red-500 text-white"}`}>
+                {recentInterview.company_name} • {recentInterview.result}
+              </span>
+            )}
+          </div>
 
           <div className="p-5 bg-[#020617] border-2 border-slate-700 space-y-4 text-xs">
             <div className="space-y-1">
               <span className="text-[9px] font-black text-purple-400 uppercase">Question Asked</span>
-              <p className="text-slate-50 font-black uppercase">"How do you handle multi-region write latency in CockroachDB?"</p>
+              <p className="text-slate-50 font-black uppercase">
+                {recentInterview?.questions_asked?.[0] || '"How do you handle multi-region write latency in CockroachDB?"'}
+              </p>
             </div>
 
             <div className="space-y-1 pt-3 border-t border-slate-800">
-              <span className="text-[9px] font-black text-slate-400 uppercase">Your Response</span>
-              <p className="text-slate-300 font-sans italic">"I mentioned leaseholders and Raft consensus groups, but forgot regional table pinning."</p>
+              <span className="text-[9px] font-black text-slate-400 uppercase">Recorded Feedback & Weak Areas</span>
+              <p className="text-slate-300 font-sans italic">
+                {recentInterview?.feedback || '"Good communication, needs deeper distributed systems knowledge."'}
+              </p>
             </div>
 
             <div className="space-y-1 pt-3 border-t border-slate-800 bg-[#A855F7]/10 p-3 border-2 border-purple-500 shadow-[3px_3px_0px_0px_#A855F7]">
               <span className="text-[9px] font-black text-purple-300 uppercase flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-purple-400" /> AI Coach Feedback & Improved Answer
+                <Sparkles className="w-3.5 h-3.5 text-purple-400" /> AI Coach Feedback & Memory Provenance
               </span>
               <p className="text-purple-200 font-sans font-medium">
-                Explicitly mention REGIONAL BY TABLE topologies to keep leaseholders local to the primary user region for sub-10ms writes.
+                Weakness flagged in System Design & Vector Indexing. Persisted to CockroachDB memory to prioritize in future recommendations.
               </p>
             </div>
           </div>

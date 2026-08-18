@@ -1,9 +1,23 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { History, Sparkles, Filter, Calendar } from "lucide-react";
+import { apiGet } from "@/lib/api";
 
 export default function TimelinePage() {
-  const events = [
+  const [timelineData, setTimelineData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    apiGet('/api/v1/timeline')
+      .then((data) => {
+        setTimelineData(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const fallbackEvents = [
     {
       date: "AUGUST 15, 2026",
       type: "INTERVIEW_LOG",
@@ -42,6 +56,18 @@ export default function TimelinePage() {
     }
   ];
 
+  const events = timelineData?.events?.map((evt: any) => ({
+    date: evt.date || evt.created_at ? new Date(evt.created_at || evt.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }).toUpperCase() : "RECENT",
+    type: evt.event_type || evt.type || "MEMORY_EVENT",
+    title: evt.title || evt.summary,
+    desc: evt.description || evt.summary || "Empirical event logged in persistent CockroachDB store.",
+    confidence: `${Math.round((evt.confidence || evt.importance_score || 0.9) * 100)}% Confidence`,
+    impact: "+3 DNA Score Shift",
+    color: evt.event_type === "INTERVIEW" ? "border-amber-400 shadow-[4px_4px_0px_0px_#FACC15]" :
+           evt.event_type === "CERTIFICATE" ? "border-green-500 shadow-[4px_4px_0px_0px_#22C55E]" :
+           "border-blue-500 shadow-[4px_4px_0px_0px_#3B82F6]"
+  })) ?? fallbackEvents;
+
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-12 font-sans">
       {/* Header */}
@@ -56,14 +82,14 @@ export default function TimelinePage() {
         </div>
         <div className="flex items-center gap-2 font-mono">
           <button className="px-3 py-1.5 bg-[#0F172A] border-2 border-slate-700 hover:border-yellow-400 text-slate-200 text-xs font-black uppercase flex items-center gap-1.5">
-            <Filter className="w-3.5 h-3.5" /> Filter by Type
+            <Filter className="w-3.5 h-3.5" /> Total Events: {events.length}
           </button>
         </div>
       </div>
 
       {/* Timeline Stream */}
       <div className="relative pl-6 border-l-4 border-slate-800 space-y-8 my-6">
-        {events.map((evt, idx) => (
+        {events.map((evt: any, idx: number) => (
           <div key={idx} className="relative">
             {/* Timeline Node Point */}
             <div className="absolute -left-[31px] top-4 w-4 h-4 bg-[#FACC15] border-2 border-slate-950 shadow-[2px_2px_0px_0px_#020617]"></div>
