@@ -193,18 +193,23 @@ class CockroachDBStore:
         return table
 
     def _get_conn(self):
-        try:
-            conn = self._pool.getconn()
-            if conn.closed != 0:
-                self._pool.putconn(conn, close=True)
+        for attempt in range(3):
+            conn = None
+            try:
                 conn = self._pool.getconn()
-            # Fast connection liveness check
-            with conn.cursor() as cur:
-                cur.execute("SELECT 1;")
-            return conn
-        except Exception:
-            # Re-acquire
-            return self._pool.getconn()
+                if conn.closed != 0:
+                    self._pool.putconn(conn, close=True)
+                    continue
+                with conn.cursor() as cur:
+                    cur.execute("SELECT 1;")
+                return conn
+            except Exception as e:
+                if conn:
+                    try:
+                        self._pool.putconn(conn, close=True)
+                    except Exception:
+                        pass
+        return self._pool.getconn()
 
     def _put_conn(self, conn, is_error: bool = False):
         if conn is None:
@@ -228,55 +233,60 @@ class CockroachDBStore:
         if "id" not in row_copy or not row_copy["id"]:
             row_copy["id"] = str(uuid.uuid4())
 
-        conn = None
-        is_err = False
-        try:
-            conn = self._get_conn()
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                columns = []
-                values = []
-                placeholders = []
-                for k, v in row_copy.items():
-                    columns.append(k)
-                    if isinstance(v, (dict, list)):
-                        values.append(Json(v))
-                    else:
-                        values.append(v)
-                    placeholders.append("%s")
+        for attempt in range(2):
+            conn = None
+            is_err = False
+            try:
+                conn = self._get_conn()
+                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                    columns = []
+                    values = []
+                    placeholders = []
+                    for k, v in row_copy.items():
+                        columns.append(k)
+                        if isinstance(v, (dict, list)):
+                            values.append(Json(v))
+                        else:
+                            values.append(v)
+                        placeholders.append("%s")
 
-                sql = f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({', '.join(placeholders)}) RETURNING *;"
-                cur.execute(sql, values)
-                result = dict(cur.fetchone())
-                conn.commit()
-                return result
-        except Exception as e:
-            is_err = True
-            if conn and conn.closed == 0:
-                try:
-                    conn.rollback()
-                except Exception:
-                    pass
-            logger.error(f"CockroachDB insert error on {table}: {e}")
-            raise
-        finally:
-            self._put_conn(conn, is_err)
+                    sql = f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({', '.join(placeholders)}) RETURNING *;"
+                    cur.execute(sql, values)
+                    result = dict(cur.fetchone())
+                    conn.commit()
+                    return result
+            except Exception as e:
+                is_err = True
+                if conn and conn.closed == 0:
+                    try:
+                        conn.rollback()
+                    except Exception:
+                        pass
+                logger.error(f"CockroachDB insert error on {table} (attempt {attempt+1}): {e}")
+                if attempt == 1:
+                    raise
+            finally:
+                self._put_conn(conn, is_err)
 
     def get_by_id(self, table: str, row_id: str) -> Optional[Dict]:
         table = self._normalize_table(table)
-        conn = None
-        is_err = False
-        try:
-            conn = self._get_conn()
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                cur.execute(f"SELECT * FROM {table} WHERE id = %s;", (row_id,))
-                res = cur.fetchone()
-                return dict(res) if res else None
-        except Exception as e:
-            is_err = True
-            logger.error(f"CockroachDB get_by_id error on {table}: {e}")
-            return None
-        finally:
-            self._put_conn(conn, is_err)
+        for attempt in range(2):
+            conn = None
+            is_err = False
+            try:
+                conn = self._get_conn()
+                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                    cur.execute(f"SELECT * FROM {table} WHERE id = %s;", (row_id,))
+                    res = cur.fetchone()
+                    return dict(res) if res else None
+            except Exception as e:
+                is_err = True
+                logger.error(f"CockroachDB get_by_id error on {table} (attempt {attempt+1}): {e}")
+                if attempt == 1:
+                    return None
+            finally:
+                self._put_conn(conn, is_err)
+        return None
 
     def find_one(self, table: str, **filters) -> Optional[Dict]:
         results = self.find_all(table, **filters)
@@ -284,62 +294,33 @@ class CockroachDBStore:
 
     def find_all(self, table: str, **filters) -> List[Dict]:
         table = self._normalize_table(table)
-        conn = None
-        is_err = False
-        try:
-            conn = self._get_conn()
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                if not filters:
-                    cur.execute(f"SELECT * FROM {table} ORDER BY created_at DESC;")
-                else:
-                    where_clauses = [f"{k} = %s" for k in filters.keys()]
-                    sql = f"SELECT * FROM {table} WHERE {' AND '.join(where_clauses)} ORDER BY created_at DESC;"
-                    cur.execute(sql, list(filters.values()))
-                rows = cur.fetchall()
-                return [dict(r) for r in rows]
-        except Exception as e:
-            is_err = True
-            logger.error(f"CockroachDB find_all error on {table}: {e}")
-            return []
-        finally:
-            self._put_conn(conn, is_err)
+        for attempt in range(2):
+            conn = None
+            is_err = False
+            try:
+                conn = self._get_conn()
+                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                    if not filters:
+                        cur.execute(f"SELECT * FROM {table} ORDER BY created_at DESC;")
+                    else:
+                        where_clauses = [f"{k} = %s" for k in filters.keys()]
+                        sql = f"SELECT * FROM {table} WHERE {' AND '.join(where_clauses)} ORDER BY created_at DESC;"
+                        cur.execute(sql, list(filters.values()))
+                    rows = cur.fetchall()
+                    return [dict(r) for r in rows]
+            except Exception as e:
+                is_err = True
+                logger.error(f"CockroachDB find_all error on {table} (attempt {attempt+1}): {e}")
+                if attempt == 1:
+                    return []
+            finally:
+                self._put_conn(conn, is_err)
+        return []
 
     def update(self, table: str, row_id: str, updates: Dict) -> Optional[Dict]:
         table = self._normalize_table(table)
         if not updates:
             return self.get_by_id(table, row_id)
-
-        conn = None
-        is_err = False
-        try:
-            conn = self._get_conn()
-            with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                set_clauses = []
-                values = []
-                for k, v in updates.items():
-                    set_clauses.append(f"{k} = %s")
-                    if isinstance(v, (dict, list)):
-                        values.append(Json(v))
-                    else:
-                        values.append(v)
-                values.append(row_id)
-
-                sql = f"UPDATE {table} SET {', '.join(set_clauses)} WHERE id = %s RETURNING *;"
-                cur.execute(sql, values)
-                result = cur.fetchone()
-                conn.commit()
-                return dict(result) if result else None
-        except Exception as e:
-            is_err = True
-            if conn and conn.closed == 0:
-                try:
-                    conn.rollback()
-                except Exception:
-                    pass
-            logger.error(f"CockroachDB update error on {table}: {e}")
-            raise
-        finally:
-            self._put_conn(conn, is_err)
 
     def delete(self, table: str, row_id: str) -> bool:
         table = self._normalize_table(table)

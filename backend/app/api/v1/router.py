@@ -23,6 +23,10 @@ from app.api.v1 import (
     auto_apply,
     global_resilience,
     negotiation_lab,
+    pitch_deck,
+    live_demo,
+    deploy_hub,
+    architecture_flow,
     interviews,
     skills,
     memory,
@@ -49,6 +53,10 @@ api_router.include_router(voice_interview.router)
 api_router.include_router(auto_apply.router)
 api_router.include_router(global_resilience.router)
 api_router.include_router(negotiation_lab.router)
+api_router.include_router(pitch_deck.router)
+api_router.include_router(live_demo.router)
+api_router.include_router(deploy_hub.router)
+api_router.include_router(architecture_flow.router)
 api_router.include_router(interviews.router)
 api_router.include_router(skills.router)
 api_router.include_router(memory.router)

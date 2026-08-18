@@ -10,7 +10,7 @@
     },
     {
       "test": "POST /api/v1/auth/register",
-      "detail": "User registered (ID: ac436c00-7a91-4ca2-a4ec-186e52baba8a) with Bearer token"
+      "detail": "User registered (ID: 86e9e71c-87b6-4b99-ab07-ebaf15052b85) with Bearer token"
     },
     {
       "test": "POST /api/v1/auth/login",
@@ -18,7 +18,7 @@
     },
     {
       "test": "GET /api/v1/auth/me",
-      "detail": "Authenticated as test_auditor_1787044666@careerdna.ai (Lead AI Engineer)"
+      "detail": "Authenticated as test_auditor_1787045785@careerdna.ai (Lead AI Engineer)"
     },
     {
       "test": "GET /api/v1/dna",
@@ -30,10 +30,10 @@
     },
     {
       "test": "POST /api/v1/skills",
-      "detail": "Created skill 6cffafb9-0aff-460a-a08e-e3f06ee2c474"
+      "detail": "Created skill 123c7735-29de-4d55-8a60-04cf825f32c9"
     },
     {
-      "test": "DELETE /api/v1/skills/6cffafb9-0aff-460a-a08e-e3f06ee2c474",
+      "test": "DELETE /api/v1/skills/123c7735-29de-4d55-8a60-04cf825f32c9",
       "detail": "Skill deleted successfully"
     },
     {
@@ -46,7 +46,7 @@
     },
     {
       "test": "POST /api/v1/memory",
-      "detail": "Created memory node 3c4694f4-0b31-4f47-920c-6d6e17b24d4e"
+      "detail": "Created memory node 3804581a-d103-4798-8c9e-c93d6e3e7eeb"
     },
     {
       "test": "GET /api/v1/interviews",
@@ -58,10 +58,10 @@
     },
     {
       "test": "POST /api/v1/learning",
-      "detail": "Created learning course 1c428875-b3fb-427c-aef3-a26e076894de"
+      "detail": "Created learning course fa75ed8d-58ab-429a-a9f9-1df57e1fb093"
     },
     {
-      "test": "PATCH /api/v1/learning/1c428875-b3fb-427c-aef3-a26e076894de",
+      "test": "PATCH /api/v1/learning/fa75ed8d-58ab-429a-a9f9-1df57e1fb093",
       "detail": "Course completed"
     },
     {
@@ -69,12 +69,8 @@
       "detail": "Total Notifications: 3"
     },
     {
-      "test": "PATCH /api/v1/notifications/88fb4e3a-57fd-4e58-a57f-b4ba52b0781e/read",
-      "detail": "Marked notification as read"
-    },
-    {
       "test": "POST /api/v1/documents/presigned-url",
-      "detail": "Upload URL generated: resumes/ac436c00-7a91-4ca2-a4ec-186e52baba8a/27a631ff-26cd-4a0d-805d-e6f8c0edcd4b_my_resume_2026.pdf"
+      "detail": "Upload URL generated: resumes/86e9e71c-87b6-4b99-ab07-ebaf15052b85/5b3b3c92-c06c-470f-8f8f-843f95999cad_my_resume_2026.pdf"
     },
     {
       "test": "POST /api/v1/agent/recommend (SSE)",
@@ -114,7 +110,7 @@
     },
     {
       "test": "POST /api/v1/interviews/evaluate",
-      "detail": "Mock Graded: 88/100 (EXCELLENT), Vector Node: 86ab4a95..."
+      "detail": "Mock Graded: 88/100 (EXCELLENT), Vector Node: 8d16b430..."
     },
     {
       "test": "GET /api/v1/reflection/prompts",
@@ -130,7 +126,7 @@
     },
     {
       "test": "POST /api/v1/cluster/exec-ccloud",
-      "detail": "ccloud command executed in 0.0ms"
+      "detail": "ccloud command executed in 0.08ms"
     },
     {
       "test": "GET /api/v1/agents/roster",
@@ -166,7 +162,7 @@
     },
     {
       "test": "POST /api/v1/voice/evaluate-transcript",
-      "detail": "Voice Evaluation: 79% Score, 25 WPM, Node: 89277f3e..."
+      "detail": "Voice Evaluation: 79% Score, 25 WPM, Node: b6d6bc1f..."
     },
     {
       "test": "GET /api/v1/auto-apply/matches",
@@ -191,6 +187,26 @@
     {
       "test": "POST /api/v1/negotiation/counter-offer",
       "detail": "Negotiation: COUNTER_PROPOSED (78% prob), 4-Yr Gain: +$210,000"
+    },
+    {
+      "test": "GET /api/v1/showcase/pitch-slides",
+      "detail": "Retrieved 5 pitch slides"
+    },
+    {
+      "test": "GET /api/v1/showcase/demo-steps",
+      "detail": "Retrieved 6 demo steps"
+    },
+    {
+      "test": "POST /api/v1/showcase/trigger-step",
+      "detail": "Demo Step Triggered: Retrieved 5 vector memory nodes from CockroachDB C..."
+    },
+    {
+      "test": "GET /api/v1/showcase/deploy-manifests",
+      "detail": "Retrieved 3 production deployment manifests"
+    },
+    {
+      "test": "GET /api/v1/showcase/architecture-spec",
+      "detail": "Architecture Spec: 4 Layers, 6 Data Flows"
     },
     {
       "test": "GET /",
@@ -273,6 +289,22 @@
       "detail": "HTTP 200 OK"
     },
     {
+      "test": "GET /pitch-deck",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /live-demo",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /architecture",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /deploy-hub",
+      "detail": "HTTP 200 OK"
+    },
+    {
       "test": "GET /applications",
       "detail": "HTTP 200 OK"
     },
@@ -297,6 +329,11 @@
       "detail": "HTTP 200 OK"
     }
   ],
-  "failed": [],
+  "failed": [
+    {
+      "test": "Notifications API",
+      "error": ""
+    }
+  ],
   "observations": []
 }

@@ -29,12 +29,20 @@ import {
   Radio,
   Send,
   Globe,
-  DollarSign
+  DollarSign,
+  Tv,
+  PlayCircle,
+  Layers,
+  Cloud
 } from "lucide-react";
 import { apiGet } from "@/lib/api";
 
 const NAV_ITEMS = [
   { name: "Command Center", path: "/dashboard", icon: LayoutDashboard },
+  { name: "Judge Pitch Deck", path: "/pitch-deck", icon: Tv },
+  { name: "Live Demo Tour", path: "/live-demo", icon: PlayCircle },
+  { name: "System Architecture", path: "/architecture", icon: Layers },
+  { name: "Deployment Hub", path: "/deploy-hub", icon: Cloud },
   { name: "Career DNA", path: "/career-dna", icon: Dna },
   { name: "Memory Timeline", path: "/timeline", icon: History },
   { name: "Memory Graph", path: "/memory-graph", icon: Network },

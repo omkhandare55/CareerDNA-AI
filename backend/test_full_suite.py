@@ -526,8 +526,57 @@ try:
 except Exception as e:
     log_fail("Negotiation Battle API", str(e))
 
-# 10. FRONTEND WEB ROUTES LIVENESS
-print("\n[PHASE 10] Testing Frontend Next.js Web Routes Liveness (26 Routes)...")
+# 10. PHASE 5: HACKATHON GRAND FINALE & SHOWCASE SUITE
+print("\n[PHASE 10] Testing Phase 5 Hackathon Showcase & Deployment Suite...")
+
+# 10.1 Pitch Deck Studio
+try:
+    r = client.get(f"{BASE_API}/api/v1/showcase/pitch-slides")
+    assert r.status_code == 200
+    s_data = r.json()
+    assert s_data.get("total") == 5
+    log_pass("GET /api/v1/showcase/pitch-slides", f"Retrieved {s_data.get('total')} pitch slides")
+except Exception as e:
+    log_fail("Pitch Deck API", str(e))
+
+# 10.2 Live Demo Controller
+try:
+    r = client.get(f"{BASE_API}/api/v1/showcase/demo-steps")
+    assert r.status_code == 200
+    steps_data = r.json()
+    assert steps_data.get("total") == 6
+    log_pass("GET /api/v1/showcase/demo-steps", f"Retrieved {steps_data.get('total')} demo steps")
+
+    r_trig = client.post(f"{BASE_API}/api/v1/showcase/trigger-step", headers=headers, json={
+        "step_id": "step_1_vector"
+    })
+    assert r_trig.status_code == 200
+    log_pass("POST /api/v1/showcase/trigger-step", f"Demo Step Triggered: {r_trig.json().get('live_result_summary')[:50]}...")
+except Exception as e:
+    log_fail("Live Demo Controller API", str(e))
+
+# 10.3 Deployment Hub Manifests
+try:
+    r = client.get(f"{BASE_API}/api/v1/showcase/deploy-manifests")
+    assert r.status_code == 200
+    m_data = r.json()
+    assert m_data.get("total") == 3
+    log_pass("GET /api/v1/showcase/deploy-manifests", f"Retrieved {m_data.get('total')} production deployment manifests")
+except Exception as e:
+    log_fail("Deploy Hub API", str(e))
+
+# 10.4 Architecture Specification
+try:
+    r = client.get(f"{BASE_API}/api/v1/showcase/architecture-spec")
+    assert r.status_code == 200
+    arch_data = r.json()
+    assert len(arch_data.get("layers", [])) == 4
+    log_pass("GET /api/v1/showcase/architecture-spec", f"Architecture Spec: {len(arch_data.get('layers'))} Layers, {len(arch_data.get('data_flows'))} Data Flows")
+except Exception as e:
+    log_fail("Architecture Spec API", str(e))
+
+# 11. FRONTEND WEB ROUTES LIVENESS
+print("\n[PHASE 11] Testing Frontend Next.js Web Routes Liveness (30 Routes)...")
 frontend_routes = [
     "/",
     "/login",
@@ -549,6 +598,10 @@ frontend_routes = [
     "/auto-apply",
     "/global-resilience",
     "/negotiation-lab",
+    "/pitch-deck",
+    "/live-demo",
+    "/architecture",
+    "/deploy-hub",
     "/applications",
     "/resume",
     "/interview-analytics",
