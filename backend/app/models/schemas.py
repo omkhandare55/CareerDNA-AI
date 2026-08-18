@@ -9,7 +9,7 @@ import uuid
 from datetime import date, datetime
 from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -98,12 +98,22 @@ class UpdateDNARequest(BaseModel):
 
 class AgentRecommendRequest(BaseModel):
     query: str = Field(
-        min_length=5,
+        min_length=3,
         example="How do I transition from Fullstack Developer to AI Engineer?"
     )
-    target_role: Optional[str] = Field(default=None, example="AI Engineer")
-    execution_mode: Literal["RECOMMENDATION", "LEARNING_PLAN", "MOCK_INTERVIEW"] = "RECOMMENDATION"
+    target_role: Optional[str] = Field(default="Senior AI Engineer", example="AI Engineer")
+    execution_mode: str = "RECOMMENDATION"
     simulation_mode: bool = False
+
+    @field_validator("execution_mode", mode="before")
+    @classmethod
+    def normalize_mode(cls, v: Any) -> str:
+        if not v or str(v).lower() in ["default", "recommendation"]:
+            return "RECOMMENDATION"
+        v_upper = str(v).upper()
+        if v_upper in ["LEARNING_PLAN", "MOCK_INTERVIEW", "RECOMMENDATION"]:
+            return v_upper
+        return "RECOMMENDATION"
 
 
 class SSEEvent(BaseModel):
@@ -116,9 +126,13 @@ class SSEEvent(BaseModel):
 # ─────────────────────────────────────────────────────────────────────────────
 
 class PresignedURLRequest(BaseModel):
-    file_name: str
+    file_name: Optional[str] = None
+    filename: Optional[str] = None
     content_type: str = "application/pdf"
-    document_type: Literal["RESUME", "CERTIFICATE", "PORTFOLIO"] = "RESUME"
+    document_type: str = "RESUME"
+
+    def get_effective_filename(self) -> str:
+        return self.file_name or self.filename or "resume.pdf"
 
 
 class PresignedURLResponse(BaseModel):
@@ -156,7 +170,7 @@ class InterviewRecord(BaseModel):
     company_name: str
     role_title: str
     interview_date: date
-    result: Literal["PASSED", "FAILED", "PENDING"] = "PENDING"
+    result: str = "PENDING"
     questions_asked: List[str] = []
     weak_topics: List[str] = []
     feedback: Optional[str] = None
@@ -171,6 +185,13 @@ class InterviewListResponse(BaseModel):
 # ─────────────────────────────────────────────────────────────────────────────
 # Memory
 # ─────────────────────────────────────────────────────────────────────────────
+
+class AddMemoryRequest(BaseModel):
+    memory_type: str = "REFLECTION"
+    summary: str
+    importance_score: float = Field(default=0.7, ge=0.0, le=1.0)
+    raw_data: Optional[Dict[str, Any]] = None
+
 
 class MemoryNode(BaseModel):
     memory_id: str

@@ -1,7 +1,8 @@
 """
 CareerDNA AI – Notifications Endpoints
-GET  /api/v1/notifications           → Unread notifications list
-POST /api/v1/notifications/{id}/read → Mark as read
+GET   /api/v1/notifications           → Unread notifications list
+POST  /api/v1/notifications/{id}/read → Mark as read
+PATCH /api/v1/notifications/{id}/read → Mark as read
 DELETE /api/v1/notifications/{id}    → Dismiss notification
 """
 
@@ -39,7 +40,6 @@ async def list_notifications(current_user: dict = Depends(get_current_user)):
     store = get_demo_store()
 
     rows = store.find_all("notifications", user_id=user_id)
-    # Unread first, then by created_at descending
     rows.sort(key=lambda r: (r.get("is_read", False), str(r.get("created_at", ""))), reverse=False)
 
     items = [_row_to_item(r) for r in rows]
@@ -49,6 +49,7 @@ async def list_notifications(current_user: dict = Depends(get_current_user)):
 
 
 @router.post("/{notification_id}/read")
+@router.patch("/{notification_id}/read")
 async def mark_as_read(
     notification_id: str,
     current_user: dict = Depends(get_current_user),
@@ -59,7 +60,7 @@ async def mark_as_read(
     if not row or row.get("user_id") != current_user["user_id"]:
         raise HTTPException(status_code=404, detail="Notification not found.")
     store.update("notifications", notification_id, {"is_read": True})
-    return {"message": "Notification marked as read."}
+    return {"message": "Notification marked as read.", "notification_id": notification_id}
 
 
 @router.post("/read-all")

@@ -32,7 +32,7 @@ async def get_presigned_url(
 
     upload_url, s3_key = s3_service.generate_presigned_url(
         user_id=user_id,
-        file_name=body.file_name,
+        file_name=body.get_effective_filename(),
         content_type=body.content_type,
         document_type=body.document_type,
     )

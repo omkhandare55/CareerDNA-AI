@@ -1,0 +1,162 @@
+{
+  "passed": [
+    {
+      "test": "GET /",
+      "detail": "Status: online"
+    },
+    {
+      "test": "GET /health",
+      "detail": "Status: healthy"
+    },
+    {
+      "test": "POST /api/v1/auth/register",
+      "detail": "User registered (ID: 5dedb8ad-8307-45de-94f0-a1c3fc05c708) with Bearer token"
+    },
+    {
+      "test": "POST /api/v1/auth/login",
+      "detail": "Token refreshed: eyJhbGciOiJIUzI1NiIs..."
+    },
+    {
+      "test": "GET /api/v1/auth/me",
+      "detail": "Authenticated as test_auditor_1787037930@careerdna.ai (Lead AI Engineer)"
+    },
+    {
+      "test": "GET /api/v1/dna",
+      "detail": "DNA Score: 56"
+    },
+    {
+      "test": "GET /api/v1/skills",
+      "detail": "Total Skills: 10"
+    },
+    {
+      "test": "POST /api/v1/skills",
+      "detail": "Created skill 31c07dff-b218-4e4e-b262-33499dab9f97"
+    },
+    {
+      "test": "DELETE /api/v1/skills/31c07dff-b218-4e4e-b262-33499dab9f97",
+      "detail": "Skill deleted successfully"
+    },
+    {
+      "test": "GET /api/v1/timeline",
+      "detail": "Total Events: 8"
+    },
+    {
+      "test": "GET /api/v1/memory",
+      "detail": "Total Memories: 5"
+    },
+    {
+      "test": "POST /api/v1/memory",
+      "detail": "Created memory node 320a3196-efc2-4aac-92b9-36a489717495"
+    },
+    {
+      "test": "GET /api/v1/interviews",
+      "detail": "Total Interviews: 2"
+    },
+    {
+      "test": "GET /api/v1/learning",
+      "detail": "Total Courses: 4"
+    },
+    {
+      "test": "POST /api/v1/learning",
+      "detail": "Created learning course 93fdf732-062e-4ad8-9ee7-f692f3dd9484"
+    },
+    {
+      "test": "PATCH /api/v1/learning/93fdf732-062e-4ad8-9ee7-f692f3dd9484",
+      "detail": "Course completed"
+    },
+    {
+      "test": "GET /api/v1/notifications",
+      "detail": "Total Notifications: 3"
+    },
+    {
+      "test": "PATCH /api/v1/notifications/33e15145-3251-4d73-b8bb-d978d74d9809/read",
+      "detail": "Marked notification as read"
+    },
+    {
+      "test": "POST /api/v1/documents/presigned-url",
+      "detail": "Upload URL generated: resumes/5dedb8ad-8307-45de-94f0-a1c3fc05c708/e33a939a-f8b7-4567-b8a0-cc892b4682fc_my_resume_2026.pdf"
+    },
+    {
+      "test": "POST /api/v1/agent/recommend (SSE)",
+      "detail": "Received 24 events. Flow verified."
+    },
+    {
+      "test": "calculate_decay_score()",
+      "detail": "S(0)=0.81, S(30)=0.5165, S(30, F=5)=0.7243"
+    },
+    {
+      "test": "cosine_similarity()",
+      "detail": "Exact match=1.0, Orthogonal=0.0 verified"
+    },
+    {
+      "test": "MemoryEvolutionEngine",
+      "detail": "Duplicate vector merging verified"
+    },
+    {
+      "test": "collect_all_signals()",
+      "detail": "Collected 7 signals across 7 distinct streams"
+    },
+    {
+      "test": "SignalRanker.rank_signals()",
+      "detail": "Top signal: 'Senior AI Agent Engineer'"
+    },
+    {
+      "test": "GET /",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /login",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /register",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /dashboard",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /career-dna",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /timeline",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /memory-graph",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /recommendations",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /applications",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /resume",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /interview-analytics",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /learning-plan",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /notifications",
+      "detail": "HTTP 200 OK"
+    },
+    {
+      "test": "GET /settings",
+      "detail": "HTTP 200 OK"
+    }
+  ],
+  "failed": [],
+  "observations": []
+}

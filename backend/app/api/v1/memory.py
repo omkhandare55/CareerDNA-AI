@@ -14,7 +14,7 @@ from fastapi import APIRouter, Depends, Query
 
 from app.core.database import get_demo_store
 from app.core.security import get_current_user
-from app.models.schemas import MemoryGraphResponse, MemoryNode, MemoryEdge
+from app.models.schemas import MemoryGraphResponse, MemoryNode, MemoryEdge, AddMemoryRequest
 
 router = APIRouter(prefix="/memory", tags=["Memory"])
 logger = logging.getLogger("careerdna.memory")
@@ -112,9 +112,7 @@ async def get_memory_graph(current_user: dict = Depends(get_current_user)):
 
 @router.post("", status_code=201)
 async def add_memory(
-    memory_type: str,
-    summary: str,
-    importance_score: float = Query(default=0.7, ge=0.0, le=1.0),
+    body: AddMemoryRequest,
     current_user: dict = Depends(get_current_user),
 ):
     """Manually insert a career memory event."""
@@ -123,11 +121,11 @@ async def add_memory(
 
     row = store.insert("career_memory", {
         "user_id": user_id,
-        "memory_type": memory_type.upper(),
-        "summary": summary,
-        "raw_data": {},
-        "importance_score": importance_score,
+        "memory_type": body.memory_type.upper(),
+        "summary": body.summary,
+        "raw_data": body.raw_data or {},
+        "importance_score": body.importance_score,
         "created_at": datetime.now(timezone.utc),
     })
 
-    return {"memory_id": row["id"], "message": "Memory created successfully."}
+    return {"id": row["id"], "memory_id": row["id"], "message": "Memory created successfully."}
